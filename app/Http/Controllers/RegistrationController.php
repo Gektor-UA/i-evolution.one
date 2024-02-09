@@ -27,8 +27,7 @@ class RegistrationController extends Controller
             'last_name' => $request['last_name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
-//            'referrer_hash' => $this->generationReferrerHash(),
-            'referrer_hash' => 111111,
+            'referrer_hash' => $this->generationReferrerHash(),
             'verification_withdrawal' => 0,
             'verification_tariff_closing' => 0,
         ]);
@@ -41,5 +40,19 @@ class RegistrationController extends Controller
         Auth::logout();
 
         return redirect('/');
+    }
+
+    private function generationReferrerHash()
+    {
+        $str  = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz123456789';
+        $hash = '';
+
+        do {
+            for ($i = 1; $i <= 10; $i++) {
+                $hash .= $str[rand(0, strlen($str)-1)];
+            }
+        } while ( (bool)User::where('referrer_hash', '=', $hash)->count() );
+
+        return $hash;
     }
 }

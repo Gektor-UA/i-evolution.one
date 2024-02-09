@@ -5,7 +5,7 @@
         <div class="container">
             <div class="i-health__inner">
                 <h2 class="section-heading">I-Health</h2>
-                <a href="#">Refka</a>
+                <a href="" class="btn-primary color-white" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">Refka</a>
                 {{--                <a class="i-health__link nav-link refs-btn" href="#" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">--}}
                 {{--                    <svg--}}
                 {{--                        width="7"--}}
