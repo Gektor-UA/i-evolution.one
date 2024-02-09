@@ -449,7 +449,17 @@
         <br>
         <nav>
             <ul>
-                <li><a href="{{ route('register') }}">Реєстрація</a></li>
+                @auth
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit">Вийти</button>
+                        </form>
+                    </li>
+                @else
+                    <li><a href="{{ route('register') }}">Реєстрація</a></li>
+                    <li><a href="{{ route('login') }}">Авторизація</a></li>
+                @endauth
             </ul>
         </nav>
     </header>

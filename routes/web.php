@@ -19,11 +19,21 @@ Route::get('/', function () {
 
 
 
-Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
+//Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
+
+//Cabinet
+Route::get('/cabinet', [App\Http\Controllers\CabinetController::class, 'index'])->name('cabinet');
 
 //Registration
 Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'create'])->name('register');
 Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'store'])->name('register.store');
+
+//Logout
+Route::post('/logout', [App\Http\Controllers\RegistrationController::class, 'logout'])->name('logout');
+
+//Login
+Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [App\Http\Controllers\LoginController::class, 'login'])->name('login');
 
 
 
