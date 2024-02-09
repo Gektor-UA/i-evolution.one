@@ -21,12 +21,14 @@ class RegistrationController extends Controller
 
     public function create(Request $request)
     {
+        // Валидація даних
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
         ]);
 
+        // Створення нового користувача
         $NewUser = User::create([
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
@@ -37,6 +39,7 @@ class RegistrationController extends Controller
             'verification_tariff_closing' => 0,
         ]);
 
+        // Перевірка та створення реферала
         $RefUser = User::where('referrer_hash', '=', Cookie::get('referrerHash'))->first();
         if (!empty($RefUser)) {
             ReferralsUser::create([
@@ -45,6 +48,7 @@ class RegistrationController extends Controller
             );
         }
 
+        // Створення гаманця
         Purse::create([
             'user_id' => $NewUser->id,
             'amount' => 0,
@@ -55,7 +59,7 @@ class RegistrationController extends Controller
         return redirect('/')->with('success', 'Ви успішно зареєструвалися!');
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         Auth::logout();
 
