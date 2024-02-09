@@ -450,7 +450,6 @@
         @yield('content')
     </main>
 
-    <!-- screan 8 -->
     <footer class="footer">
         FOOTER
     </footer>
