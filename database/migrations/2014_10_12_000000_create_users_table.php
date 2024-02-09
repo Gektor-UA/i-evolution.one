@@ -30,58 +30,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-//        DB::table('users')->insert([
-//            [
-//                'id' => 1,
-//                'first_name' => 'Eugen',
-//                'last_name' => 'Qwerty',
-//                'email' => 'whitefallenangel@gmail.com',
-//                'phone' => '',
-//                'messenger' => '',
-//                'birthday' => '1970-01-01 00:00:00',
-//                'referrer_hash' => 'vnRB7vBS66',
-//                'twofa_secret' => null,
-//                'avatar' => 'avatars/6I8Ce7KPlNykDiY3DsNIVbsHaCmlmFauDZpWQkel.png',
-//                'start_promo' => null,
-//                'achieved_promo_level' => '',
-//                'verification_withdrawal' => 0,
-//                'verification_tariff_closing' => 0,
-//                'role_id' => 0,
-//                'achived_turnover' => 7475,
-//                'is_ambassador' => 1,
-//                'ambassador_date' => null,
-//                'email_verified_at' => null,
-//                'password' => '$2y$10$Gr/QjDCUMYqiinv4ucRqJ./txrrxKAO/46CyyKI45dq5ByY9Yrp6G',
-//                'remember_token' => null,
-//                'created_at' => '2024-02-09 06:49:14',
-//                'updated_at' => '2024-02-09 06:49:14',
-//            ],
-//            [
-//                'id' => 2,
-//                'first_name' => 'Henry',
-//                'last_name' => 'HHHH',
-//                'email' => 'ik4863534+500@gmail.com',
-//                'phone' => null,
-//                'messenger' => '',
-//                'birthday' => null,
-//                'referrer_hash' => 'e19GbkczK6',
-//                'twofa_secret' => null,
-//                'avatar' => '',
-//                'start_promo' => null,
-//                'achieved_promo_level' => '',
-//                'verification_withdrawal' => 0,
-//                'verification_tariff_closing' => 0,
-//                'role_id' => 0,
-//                'achived_turnover' => 5000,
-//                'is_ambassador' => 1,
-//                'ambassador_date' => null,
-//                'email_verified_at' => null,
-//                'password' => '$2y$10$St4FzmOHcvb/XCTnW/fWpOBBeVfSzIdM4wHlG.gTLPVqfoidEQZZG',
-//                'remember_token' => null,
-//                'created_at' => '2024-02-09 06:49:14',
-//                'updated_at' => '2024-02-09 06:49:14',
-//            ],
-//        ]);
     }
 
     /**
