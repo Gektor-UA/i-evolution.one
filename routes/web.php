@@ -25,8 +25,8 @@ Route::get('/', [App\Http\Controllers\SecondUserController::class, 'index'])->na
 Route::get('/cabinet', [App\Http\Controllers\CabinetController::class, 'index'])->name('cabinet');
 
 //Registration
-Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'create'])->name('register');
-Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'store'])->name('register.store');
+Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'index'])->name('register');
+Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'create'])->name('register.create');
 
 //Logout
 Route::post('/logout', [App\Http\Controllers\RegistrationController::class, 'logout'])->name('logout');
