@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class RegistrationController extends Controller
 {
@@ -54,5 +56,16 @@ class RegistrationController extends Controller
         } while ( (bool)User::where('referrer_hash', '=', $hash)->count() );
 
         return $hash;
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers(), 'regex:/^[a-zA-Z0-9!]+$/'],
+            'registration_agreement' => ['accepted'],
+        ]);
     }
 }

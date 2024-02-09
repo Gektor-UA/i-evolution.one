@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 
-
+Route::get('/', [App\Http\Controllers\SecondUserController::class, 'index'])->name('second-users.index');
 //Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
 
 //Cabinet
@@ -34,7 +34,6 @@ Route::post('/logout', [App\Http\Controllers\RegistrationController::class, 'log
 //Login
 Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [App\Http\Controllers\LoginController::class, 'login'])->name('login');
-
 
 
 
