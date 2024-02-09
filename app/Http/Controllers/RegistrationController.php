@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purse;
+use App\Models\ReferralsUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -34,6 +36,14 @@ class RegistrationController extends Controller
             'verification_withdrawal' => 0,
             'verification_tariff_closing' => 0,
         ]);
+
+        $RefUser = User::where('referrer_hash', '=', Cookie::get('referrerHash'))->first();
+        if (!empty($RefUser)) {
+            ReferralsUser::create([
+                'user_id' => $NewUser->id,
+                'referrer_id' => $RefUser->id]
+            );
+        }
 
         Purse::create([
             'user_id' => $NewUser->id,
