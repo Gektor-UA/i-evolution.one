@@ -444,9 +444,17 @@
 
     <header class="header">
         HEADER
+        <br>
+        <br>
+        <br>
+        <nav>
+            <ul>
+                <li><a href="{{ route('register') }}">Реєстрація</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main class="site-main">
+    <main class="main">
         @yield('content')
     </main>
 

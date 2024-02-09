@@ -12,4 +12,10 @@ class UserController extends Controller
         $users = User::all();
         return view('index', ['users' => $users]);
     }
+
+    public function create()
+    {
+        $user = new User(); // Створюємо новий екземпляр моделі User
+        return view('register', compact('user')); // Передаємо створений екземпляр моделі у представлення
+    }
 }

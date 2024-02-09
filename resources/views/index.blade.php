@@ -63,11 +63,11 @@
                 </div>
 
                 <h1>Список користувачів</h1>
-                <ul>
-                    @foreach ($users as $user)
-                        <li>{{ $user->first_name }}</li>
-                    @endforeach
-                </ul>
+{{--                <ul>--}}
+{{--                    @foreach ($users as $user)--}}
+{{--                        <li>{{ $user->first_name }}</li>--}}
+{{--                    @endforeach--}}
+{{--                </ul>--}}
             </div>
 
 
