@@ -25,6 +25,7 @@
                 <!-- Форма для завантаження відео -->
                 <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <input type="file" name="video" accept="video/*" required>
                     <button type="submit">Upload Video</button>
                 </form>
@@ -32,6 +33,7 @@
                 <!-- Форма для введення посилання на YouTube -->
                 <form action="{{ route('submitYouTubeLink') }}" method="post">
                     @csrf
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <label for="youtubeLink">YouTube Link:</label>
                     <input type="text" name="youtubeLink" id="youtubeLink" required>
                     <button type="submit">Submit YouTube Link</button>
