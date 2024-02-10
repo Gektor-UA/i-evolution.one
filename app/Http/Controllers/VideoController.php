@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
@@ -35,5 +36,39 @@ class VideoController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function downloadVideo($id)
+    {
+        $video = Video::find($id);
+        if (!$video) {
+            abort(404);
+        }
+
+        $filePath = storage_path('app/public/'.$video->file_path);
+
+        if (!file_exists($filePath)) {
+            abort(404);
+        }
+
+        return response()->download($filePath, $video->file_name);
+    }
+
+    public function approveVideo($id)
+    {
+        $video = Video::findOrFail($id);
+        $video->is_approved = 1;
+        $video->save();
+
+        return redirect()->back()->with('success', 'Відео підтверджено');
+    }
+
+    public function rejectVideo($id)
+    {
+        $video = Video::findOrFail($id);
+        $video->is_approved = 0;
+        $video->save();
+
+        return redirect()->back()->with('success', 'Відео відхилено');
     }
 }
