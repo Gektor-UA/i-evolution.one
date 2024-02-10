@@ -46,3 +46,4 @@ Route::get('/main', [App\Http\Controllers\Admin\AdminController::class, 'index']
 //Upload video
 Route::post('/upload-video', [App\Http\Controllers\VideoController::class, 'uploadVideo'])->name('uploadVideo');
 Route::post('/submit-youtube-link', [App\Http\Controllers\VideoController::class, 'uploadVideo'])->name('submitYouTubeLink');
+Route::get('/download-video/{id}', [App\Http\Controllers\VideoController::class, 'downloadVideo'])->name('downloadVideo');

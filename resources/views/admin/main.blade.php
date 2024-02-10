@@ -13,8 +13,7 @@
                         <source src="{{ asset('storage/videos/' . $video->file_path) }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-{{--                    <a href="{{ route('downloadVideo', $video->id) }}">Download Video</a>--}}
-                    <a href="">Download Video</a>
+                    <a href="{{ route('downloadVideo', $video->id) }}">Download Video</a>
                 @else
                     <video controls>
                         <source src="{{ $video->video_url }}">
