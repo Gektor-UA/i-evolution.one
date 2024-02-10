@@ -44,5 +44,5 @@ Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login
 Route::get('/main', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('main');
 
 //Upload video
-Route::post('/upload-video', [App\Http\Controllers\IHealthController::class, 'uploadVideo'])->name('uploadVideo');
-Route::post('/submit-youtube-link', [App\Http\Controllers\IHealthController::class, 'submitYouTubeLink'])->name('submitYouTubeLink');
+Route::post('/upload-video', [App\Http\Controllers\VideoController::class, 'uploadVideo'])->name('uploadVideo');
+Route::post('/submit-youtube-link', [App\Http\Controllers\VideoController::class, 'uploadVideo'])->name('submitYouTubeLink');

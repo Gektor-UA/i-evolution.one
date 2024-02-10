@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Video;
 
 class AdminController extends Controller
 {
@@ -13,6 +14,12 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('admin.main');
+        $videos = Video::all();
+//
+//        foreach ($videos as $video) {
+//            var_dump($video->video_url);
+//        }
+
+        return view('admin.main', ['videos' => $videos]);
     }
 }
