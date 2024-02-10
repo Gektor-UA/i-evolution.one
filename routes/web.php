@@ -28,6 +28,11 @@ Route::get('/cabinet', [App\Http\Controllers\CabinetController::class, 'index'])
 Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'index'])->name('register');
 Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'create'])->name('register.create');
 
+//IHealth
+//Route::get('/iHealth', [App\Http\Controllers\IHealthController::class, 'index'])->name('iHealth');
+Route::get('/iHealth/{hash}', [App\Http\Controllers\IHealthController::class, 'iHealth'])->name('iHealth');
+
+
 //Logout
 Route::post('/logout', [App\Http\Controllers\RegistrationController::class, 'logout'])->name('logout');
 
