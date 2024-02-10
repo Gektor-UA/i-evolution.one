@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,8 +26,11 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Якщо користувач успішно авторизований, перенаправте його на домашню сторінку
-            return redirect()->intended('cabinet');
+            if (Auth::user()->role_id == 1) {
+                return redirect()->intended('main');
+            } else {
+                return redirect()->intended('cabinet');
+            }
         }
 
         // Якщо авторизація не вдалася, перенаправте користувача назад на сторінку логіну з повідомленням про помилку

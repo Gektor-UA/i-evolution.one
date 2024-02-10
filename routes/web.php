@@ -25,8 +25,8 @@ Route::get('/', [App\Http\Controllers\SecondUserController::class, 'index'])->na
 Route::get('/cabinet', [App\Http\Controllers\CabinetController::class, 'index'])->name('cabinet');
 
 //Registration
-Route::get('/register', [App\Http\Controllers\RegistrationController::class, 'index'])->name('register');
-Route::post('/register', [App\Http\Controllers\RegistrationController::class, 'create'])->name('register.create');
+Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'index'])->name('register');
+Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register.create');
 
 //IHealth
 //Route::get('/iHealth', [App\Http\Controllers\IHealthController::class, 'index'])->name('iHealth');
@@ -34,13 +34,15 @@ Route::get('/iHealth/{hash}', [App\Http\Controllers\IHealthController::class, 'i
 
 
 //Logout
-Route::post('/logout', [App\Http\Controllers\RegistrationController::class, 'logout'])->name('logout');
+Route::post('/logout', [\App\Http\Controllers\Auth\RegistrationController::class, 'logout'])->name('logout');
 
 //Login
-Route::get('/login', [App\Http\Controllers\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [App\Http\Controllers\LoginController::class, 'login'])->name('login');
+Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
 
+//Admin
+Route::get('/main', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('main');
 
-
+//Upload video
 Route::post('/upload-video', [App\Http\Controllers\IHealthController::class, 'uploadVideo'])->name('uploadVideo');
 Route::post('/submit-youtube-link', [App\Http\Controllers\IHealthController::class, 'submitYouTubeLink'])->name('submitYouTubeLink');
