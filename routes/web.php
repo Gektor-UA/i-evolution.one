@@ -29,7 +29,6 @@ Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::clas
 Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register.create');
 
 //IHealth
-//Route::get('/iHealth', [App\Http\Controllers\IHealthController::class, 'index'])->name('iHealth');
 Route::get('/iHealth/{hash}', [App\Http\Controllers\IHealthController::class, 'iHealth'])->name('iHealth');
 
 
@@ -47,3 +46,5 @@ Route::get('/main', [App\Http\Controllers\Admin\AdminController::class, 'index']
 Route::post('/upload-video', [App\Http\Controllers\VideoController::class, 'uploadVideo'])->name('uploadVideo');
 Route::post('/submit-youtube-link', [App\Http\Controllers\VideoController::class, 'uploadVideo'])->name('submitYouTubeLink');
 Route::get('/download-video/{id}', [App\Http\Controllers\VideoController::class, 'downloadVideo'])->name('downloadVideo');
+Route::post('/approve-video/{id}', [App\Http\Controllers\VideoController::class, 'approveVideo'])->name('approveVideo');
+Route::post('/reject-video/{id}', [App\Http\Controllers\VideoController::class, 'rejectVideo'])->name('rejectVideo');

@@ -53,4 +53,22 @@ class VideoController extends Controller
 
         return response()->download($filePath, $video->file_name);
     }
+
+    public function approveVideo($id)
+    {
+        $video = Video::findOrFail($id);
+        $video->is_approved = 1;
+        $video->save();
+
+        return redirect()->back()->with('success', 'Відео підтверджено');
+    }
+
+    public function rejectVideo($id)
+    {
+        $video = Video::findOrFail($id);
+        $video->is_approved = 0;
+        $video->save();
+
+        return redirect()->back()->with('success', 'Відео відхилено');
+    }
 }
