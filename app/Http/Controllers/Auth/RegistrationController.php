@@ -40,15 +40,6 @@ class RegistrationController extends Controller
             'verification_tariff_closing' => 0,
         ]);
 
-        // Перевірка та створення реферала
-        $RefUser = User::where('referrer_hash', '=', Cookie::get('referrerHash'))->first();
-        if (!empty($RefUser)) {
-            ReferralsUser::create([
-                'user_id' => $NewUser->id,
-                'referrer_id' => $RefUser->id]
-            );
-        }
-
         // Створення гаманця
         Purse::create([
             'user_id' => $NewUser->id,
@@ -56,6 +47,15 @@ class RegistrationController extends Controller
             'wallet_type' => Purse::I_HEALTH_PURSE,
             'percent' => 0,
         ]);
+
+        // Перевірка та створення реферала
+        $RefUser = User::where('referrer_hash', '=', Cookie::get('referrerHash'))->first();
+        if (!empty($RefUser)) {
+            ReferralsUser::create([
+                'user_id' => $NewUser->id,
+                'referral_id' => $RefUser->id]
+            );
+        }
 
         return redirect('/')->with('success', 'Ви успішно зареєструвалися!');
     }
