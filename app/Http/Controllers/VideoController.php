@@ -7,6 +7,7 @@ use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
@@ -31,10 +32,22 @@ class VideoController extends Controller
         }
 
         if ($request->filled('youtubeLink')) {
-            // Збереження посилання на YouTube
+
+            $youtubeLink = $request->input('youtubeLink');
+
+            // Якщо посилання має формат https://youtu.be/
+            if (Str::startsWith($youtubeLink, 'https://youtu.be/')) {
+                $videoId = Str::after($youtubeLink, 'https://youtu.be/');
+                // Якщо посилання має формат https://www.youtube.com/watch?v=
+            } else if (Str::startsWith($youtubeLink, 'https://www.youtube.com/watch?v=')) {
+                $videoId = Str::after($youtubeLink, 'https://www.youtube.com/watch?v=');
+            } else {
+                return redirect()->back()->with('error', 'Неправильний формат посилання на YouTube');
+            }
+            $embedLink = 'https://www.youtube.com/embed/' . $videoId;
             Video::create([
                 'user_id' => $request->user_id,
-                'video_url' => $request->input('youtubeLink'),
+                'video_url' => $embedLink,
                 'is_sent' => true,
             ]);
         }

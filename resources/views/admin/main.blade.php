@@ -6,44 +6,6 @@
 
 
     <div class="videos-list">
-{{--        @foreach ($videos as $video)--}}
-{{--            <div class="video-item">--}}
-{{--                @if ($video->file_path)--}}
-{{--                    <video controls>--}}
-{{--                        <source src="{{ asset('storage/videos/' . $video->file_path) }}" type="video/mp4">--}}
-{{--                        Your browser does not support the video tag.--}}
-{{--                    </video>--}}
-{{--                    <a href="{{ route('downloadVideo', $video->id) }}">Download Video</a>--}}
-{{--                    <div class="video-actions">--}}
-{{--                        <form action="{{ route('approveVideo', $video->id) }}" method="POST">--}}
-{{--                            @csrf--}}
-{{--                            <button type="submit">Підтвердити</button>--}}
-{{--                        </form>--}}
-{{--                        <form action="{{ route('rejectVideo', $video->id) }}" method="POST">--}}
-{{--                            @csrf--}}
-{{--                            <button type="submit">Відхилити</button>--}}
-{{--                        </form>--}}
-{{--                    </div>--}}
-{{--                @else--}}
-{{--                    <video controls>--}}
-{{--                        <source src="{{ $video->video_url }}">--}}
-{{--                        Your browser does not support the video tag.--}}
-{{--                    </video>--}}
-{{--                    <div class="video-actions">--}}
-{{--                        <form action="{{ route('approveVideo', $video->id) }}" method="POST">--}}
-{{--                            @csrf--}}
-{{--                            <button type="submit">Підтвердити</button>--}}
-{{--                        </form>--}}
-{{--                        <form action="{{ route('rejectVideo', $video->id) }}" method="POST">--}}
-{{--                            @csrf--}}
-{{--                            <button type="submit">Відхилити</button>--}}
-{{--                        </form>--}}
-{{--                    </div>--}}
-{{--                @endif--}}
-{{--            </div>--}}
-{{--        @endforeach--}}
-
-
         @foreach ($videos as $video)
             <div class="video-item">
                 @if ($video->file_path)
@@ -63,10 +25,7 @@
                         </form>
                     </div>
                 @else
-                    <video controls>
-                        <source src="{{ $video->video_url }}">
-                        Your browser does not support the video tag.
-                    </video>
+                    <iframe width="560" height="315" src="{{$video->video_url}}" frameborder="0" allowfullscreen></iframe>
                     <div class="video-actions">
                         <form action="{{ route('approveVideo', $video->id) }}" method="POST">
                             @csrf
