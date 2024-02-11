@@ -3,6 +3,9 @@
 @section('content')
     <div class="register-form">
         <h1>Реєстрація</h1>
+        @if(Request::cookie('referrerHash'))
+            <h3>Ваш реферер: {{ Request::cookie('referrerName') }}</h3>
+        @endif
         <form method="POST" action="{{ route('register') }}">
             @csrf
             <div>

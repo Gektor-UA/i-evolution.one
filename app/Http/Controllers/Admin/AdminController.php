@@ -14,8 +14,9 @@ class AdminController extends Controller
 
     public function index()
     {
-//        $videos = Video::all();
-        $videos = Video::with('user')->get();
+        $videos = Video::with('user')
+            ->whereNull('is_approved')
+            ->get();
 
         return view('admin.main', ['videos' => $videos]);
     }
