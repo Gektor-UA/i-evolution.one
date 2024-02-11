@@ -118,8 +118,10 @@ class VideoController extends Controller
 
         // Перевірка чи є амбасадором користувач який відправив відео
         $userAuth = $this->isAmbassador($user_id);
+
         // Перевірка чи є амбасадором батько користувача, якого відправив відео
-        $userParent = $this->isAmbassador(ReferralsUser::where('user_id', $user_id)->first()->referral_id);
+        $userRef = ReferralsUser::where('user_id', $user_id)->first();
+        $userParent = $userRef ? $this->isAmbassador($userRef->referral_id) : false;
 
         // Перевірка умов для нарахування бонусу
         if (!$userAuth && $userParent && $user->bonus_processed !== true) {
