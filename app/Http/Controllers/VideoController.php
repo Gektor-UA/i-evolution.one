@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purse;
+use App\Models\ReferralsUser;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -11,9 +13,12 @@ use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
+    /**
+     * Закинути відео на сервер
+     * @param $request - дані про відео
+     */
     public function uploadVideo(Request $request)
     {
-
         $request->validate([
             'video' => 'required_without:youtubeLink|mimes:mp4,mov,avi,wmv,flv',
             'youtubeLink' => 'required_without:video|url',
@@ -55,6 +60,10 @@ class VideoController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Завантажити відео
+     * @param $id - id відео
+     */
     public function downloadVideo($id)
     {
         $video = Video::find($id);
@@ -71,17 +80,69 @@ class VideoController extends Controller
         return response()->download($filePath, $video->file_name);
     }
 
-    public function approveVideo($id)
+    /**
+     * Підтвердити відео
+     * @param $id - id відео
+     * @param $request - id користувача
+     */
+    public function approveVideo($id, Request $request)
     {
+
         Video::findOrFail($id)->update(['is_approved' => 1]);
+        $this->processBonus($request->user_id);
 
         return redirect()->back()->with('success', 'Відео підтверджено');
     }
 
+    /**
+     * Відхилити відео
+     * @param $id - id відео
+     */
     public function rejectVideo($id)
     {
         Video::findOrFail($id)->update(['is_approved' => 0]);
 
         return redirect()->back()->with('success', 'Відео відхилено');
+    }
+
+    /**
+     * Метод нараховує 1 раз бонус в 20$ за підтвердження відео якщо
+     * у користувача, який відправив відео батько є амбасадором
+     * @param $user_id - id користувача
+     */
+    public function processBonus($user_id)
+    {
+        // Знаходимо баланс користувача
+        $user = User::where('id', $user_id)->first();
+        $userBalanse = Purse::where('user_id', $user_id)->first();
+
+        // Перевірка чи є амбасадором користувач який відправив відео
+        $userAuth = $this->isAmbassador($user_id);
+        // Перевірка чи є амбасадором батько користувача, якого відправив відео
+        $userParent = $this->isAmbassador(ReferralsUser::where('user_id', $user_id)->first()->referral_id);
+
+        // Перевірка умов для нарахування бонусу
+        if (!$userAuth && $userParent && $user->bonus_processed !== true) {
+            // Перевірка, чи нарахування вже було здійснено
+            if (!$user->bonus_processed) {
+                // Нарахування бонусу
+                $userBalanse->update(['amount' => $userBalanse->amount + 20]);
+                $user->update(['bonus_processed' => $user->bonus_processed = true]);
+            }
+        }
+    }
+
+    /**
+     * Метод перевіряє чи є користувач амбасадор
+     * @param $user_id - id користувача
+     * @return bool - чи є амбасадор
+     */
+    protected function isAmbassador($user_id) {
+        $user = User::where('id', $user_id)->first();
+
+        if ($user->is_ambassador == 1) {
+            return true;
+        }
+        return false;
     }
 }

@@ -17,6 +17,7 @@
                     <div class="video-actions">
                         <form action="{{ route('approveVideo', $video->id) }}" method="POST">
                             @csrf
+                            <input type="hidden" name="user_id" value="{{ $video->user_id }}">
                             <button type="submit">Підтвердити</button>
                         </form>
                         <form action="{{ route('rejectVideo', $video->id) }}" method="POST">
@@ -29,6 +30,7 @@
                     <div class="video-actions">
                         <form action="{{ route('approveVideo', $video->id) }}" method="POST">
                             @csrf
+                            <input type="hidden" name="user_id" value="{{ $video->user_id }}">
                             <button type="submit">Підтвердити</button>
                         </form>
                         <form action="{{ route('rejectVideo', $video->id) }}" method="POST">

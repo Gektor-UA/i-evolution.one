@@ -15,7 +15,17 @@ class UserController extends Controller
 
     public function create()
     {
-        $user = new User(); // Створюємо новий екземпляр моделі User
-        return view('register', compact('user')); // Передаємо створений екземпляр моделі у представлення
+        $user = new User();
+        return view('register', compact('user'));
+    }
+
+    public function isAmbassador($user_id)
+    {
+        $user = User::find($user_id);
+
+        if (!$user) {
+            return false;
+        }
+        return $user->isAmbassador();
     }
 }
