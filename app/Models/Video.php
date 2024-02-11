@@ -9,6 +9,8 @@ class Video extends Model
 {
     use HasFactory;
 
+    const BONUS_VIDEO = 20;
+
     protected $table = 'videos';
 
     protected $fillable = [

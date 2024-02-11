@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Purse;
 use App\Models\ReferralsUser;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -128,9 +129,15 @@ class VideoController extends Controller
             // Перевірка, чи нарахування вже було здійснено
             if (!$user->bonus_processed) {
                 // Нарахування бонусу
-                $userBalanse->update(['amount' => $userBalanse->amount + 20]);
+                $userBalanse->update(['amount' => $userBalanse->amount + Video::BONUS_VIDEO]);
                 $user->update(['bonus_processed' => $user->bonus_processed = true]);
             }
+            Transaction::create([
+                'user_id' => $user_id,
+                'amount' => Video::BONUS_VIDEO,
+                'type_transaction' => Transaction::SINGLE_REFERRAL_BONUS,
+                'purses_type' => Purse::I_HEALTH_PURSE
+            ]);
         }
     }
 
