@@ -27,7 +27,6 @@ class VideoController extends Controller
                 'user_id' => $request->user_id,
                 'file_path' => $videoPath,
                 'is_sent' => true,
-                'is_approved' => false,
             ]);
         }
 
@@ -37,7 +36,6 @@ class VideoController extends Controller
                 'user_id' => $request->user_id,
                 'video_url' => $request->input('youtubeLink'),
                 'is_sent' => true,
-                'is_approved' => false,
             ]);
         }
 
