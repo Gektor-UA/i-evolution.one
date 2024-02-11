@@ -18,8 +18,8 @@ Route::get('/', function () {
 });
 
 
-Route::get('/', [App\Http\Controllers\SecondUserController::class, 'index'])->name('second-users.index');
-//Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
+//Route::get('/', [App\Http\Controllers\SecondUserController::class, 'index'])->name('second-users.index');
+Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('index');
 
 //Cabinet
 Route::get('/cabinet', [App\Http\Controllers\CabinetController::class, 'index'])->name('cabinet');
