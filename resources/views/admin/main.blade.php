@@ -10,7 +10,7 @@
             <div class="video-item">
                 @if ($video->file_path)
                     <video controls>
-                        <source src="{{ asset('storage/videos/' . $video->file_path) }}" type="video/mp4">
+                        <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                     <a href="{{ route('downloadVideo', $video->id) }}">Download Video</a>
