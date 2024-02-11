@@ -14,11 +14,8 @@ class AdminController extends Controller
 
     public function index()
     {
-        $videos = Video::all();
-//
-//        foreach ($videos as $video) {
-//            var_dump($video->video_url);
-//        }
+//        $videos = Video::all();
+        $videos = Video::with('user')->get();
 
         return view('admin.main', ['videos' => $videos]);
     }

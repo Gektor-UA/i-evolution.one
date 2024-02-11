@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
     public function uploadVideo(Request $request)
     {
+
         $request->validate([
             'video' => 'required_without:youtubeLink|mimes:mp4,mov,avi,wmv,flv',
             'youtubeLink' => 'required_without:video|url',
+            'user_id' => 'required|integer',
         ]);
 
         if ($request->hasFile('video')) {
@@ -20,6 +24,7 @@ class VideoController extends Controller
             $videoPath = $request->file('video')->store('videos', 'public');
             // Збереження відео у базі даних
             Video::create([
+                'user_id' => $request->user_id,
                 'file_path' => $videoPath,
                 'is_sent' => true,
                 'is_approved' => false,
@@ -29,6 +34,7 @@ class VideoController extends Controller
         if ($request->filled('youtubeLink')) {
             // Збереження посилання на YouTube
             Video::create([
+                'user_id' => $request->user_id,
                 'video_url' => $request->input('youtubeLink'),
                 'is_sent' => true,
                 'is_approved' => false,
@@ -56,18 +62,14 @@ class VideoController extends Controller
 
     public function approveVideo($id)
     {
-        $video = Video::findOrFail($id);
-        $video->is_approved = 1;
-        $video->save();
+        Video::findOrFail($id)->update(['is_approved' => 1]);
 
         return redirect()->back()->with('success', 'Відео підтверджено');
     }
 
     public function rejectVideo($id)
     {
-        $video = Video::findOrFail($id);
-        $video->is_approved = 0;
-        $video->save();
+        Video::findOrFail($id)->update(['is_approved' => 0]);
 
         return redirect()->back()->with('success', 'Відео відхилено');
     }

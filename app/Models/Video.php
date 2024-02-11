@@ -12,9 +12,15 @@ class Video extends Model
     protected $table = 'videos';
 
     protected $fillable = [
+        'user_id',
         'video_url',
         'file_path',
         'is_sent',
         'is_approved',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
