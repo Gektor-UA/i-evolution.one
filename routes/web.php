@@ -29,7 +29,7 @@ Route::get('/register', [\App\Http\Controllers\Auth\RegistrationController::clas
 Route::post('/register', [\App\Http\Controllers\Auth\RegistrationController::class, 'create'])->name('register.create');
 
 //IHealth
-Route::get('/iHealth/{hash}', [App\Http\Controllers\IHealthController::class, 'iHealth'])->name('iHealth');
+Route::get('/i-health/{hash}', [App\Http\Controllers\IHealthController::class, 'iHealth'])->name('iHealth');
 
 
 //Logout
