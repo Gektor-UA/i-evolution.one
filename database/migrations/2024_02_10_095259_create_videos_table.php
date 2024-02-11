@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('video_url')->nullable();
             $table->string('file_path')->nullable();
             $table->boolean('is_sent')->default(false);
-            $table->boolean('is_approved')->default(false);
+            $table->boolean('is_approved')->nullable();
             $table->timestamps();
+            $table->index('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('restrict');
         });
     }
 

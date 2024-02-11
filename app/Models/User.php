@@ -56,6 +56,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function referrerData( $user_id )
     {
         return ProfileReferrer::where('profile_referrers.user_id', $user_id)
