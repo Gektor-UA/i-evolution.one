@@ -62,60 +62,70 @@ class CheckVideoConfirmationTime extends Command
 //            \Log::info('Purse: '.json_encode($userPurse));
 
             if ($elapsedHours >= 24) {
+                $withdrawals = [
+                    'first_withdrawal' => $program->first_amount,
+                    'second_withdrawal' => $program->second_amount,
+                    'third_withdrawal' => $program->third_amount,
+                ];
 
-                if ($userProgram->first_withdrawal === null) {
-                    $userProgram->first_withdrawal = true;
-                    $userProgram->save();
-                    // Здійснюємо списання з балансу користувача
-                    $amountToWithdraw = $program->first_amount;
-                    $userPurse->amount -= $amountToWithdraw;
-                    $userPurse->save();
+                foreach ($withdrawals as $withdrawalField => $amountToWithdraw) {
+                    if ($userProgram->$withdrawalField === null) {
+                        // Перевірка наявності коштів на балансі користувача
+                        if ($userPurse->amount >= $amountToWithdraw) {
+                            $userProgram->$withdrawalField = true;
+                            $userProgram->total_amount += $amountToWithdraw;
+                            $userProgram->save();
 
-                    Transaction::create([
-                        'user_id' => $video->user_id,
-                        'amount' => -$amountToWithdraw,
-                        'type_transaction' => Transaction::WITHDRAWAL_PACKAGE,
-                        'purses_type' => Purse::I_HEALTH_PURSE
-                    ]);
+                            // Списання коштів з балансу користувача
+                            $userPurse->amount -= $amountToWithdraw;
+                            $userPurse->save();
 
-                    $video->touch();
-                } elseif ($userProgram->second_withdrawal === null) {
-                    $userProgram->second_withdrawal = true;
-                    $userProgram->save();
-                    // Здійснюємо списання з балансу користувача
-                    $amountToWithdraw = $program->second_amount;
-                    $userPurse->amount -= $amountToWithdraw;
-                    $userPurse->save();
+                            Transaction::create([
+                                'user_id' => $video->user_id,
+                                'amount' => -$amountToWithdraw,
+                                'type_transaction' => Transaction::WITHDRAWAL_PACKAGE,
+                                'purses_type' => Purse::I_HEALTH_PURSE
+                            ]);
 
-                    Transaction::create([
-                        'user_id' => $video->user_id,
-                        'amount' => -$amountToWithdraw,
-                        'type_transaction' => Transaction::WITHDRAWAL_PACKAGE,
-                        'purses_type' => Purse::I_HEALTH_PURSE
-                    ]);
+                            $video->touch();
 
-                    $video->touch();
-                } elseif ($userProgram->third_withdrawal === null) {
-                    $userProgram->third_withdrawal = true;
-                    $userProgram->save();
-                    // Здійснюємо списання з балансу користувача
-                    $amountToWithdraw = $program->third_amount;
-                    $userPurse->amount -= $amountToWithdraw;
-                    $userPurse->save();
-
-                    Transaction::create([
-                        'user_id' => $video->user_id,
-                        'amount' => -$amountToWithdraw,
-                        'type_transaction' => Transaction::WITHDRAWAL_PACKAGE,
-                        'purses_type' => Purse::I_HEALTH_PURSE
-                    ]);
-
-                    $video->touch();
+                            break; // Виходимо з циклу після першого успішного списання
+                        } else {
+                            // Якщо коштів недостатньо, закриваємо програму зі штрафом
+                            $this->closeProgramWithPenalty($userProgram, $userPurse, $video);
+                            break; // Виходимо з циклу, оскільки програму закрито
+                        }
+                    }
                 }
             }
-
         }
-
         $this->info('Video confirmation times checked successfully.');
+    }
+
+
+    protected function closeProgramWithPenalty($userProgram, $userPurse, $video)
+    {
+        $amountToWithdraw = ProgramsUser::where('user_id', $video->user_id)->first()->total_amount;
+        // Штраф складає 30% від суми, яку вже списано з балансу
+        $penaltyAmount = $amountToWithdraw * 0.3;
+        $amountToWithdraw -= $penaltyAmount;
+
+        // Повернення коштів на баланс користувача зі знижкою
+        $userPurse->amount += $amountToWithdraw;
+        $userPurse->save();
+
+        Transaction::create([
+            'user_id' => $video->user_id,
+            'amount' => $amountToWithdraw,
+            'type_transaction' => Transaction::WITHDRAWAL_PACKAGE_PENALTY,
+            'purses_type' => Purse::I_HEALTH_PURSE
+        ]);
+
+        // Закриття програми зі штрафом
+        $userProgram->update(['payment_program' => 1]);
+
+        $video->is_program = 1;
+        $video->save();
+        $video->touch();
     }
 }
