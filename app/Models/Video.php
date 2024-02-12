@@ -19,6 +19,7 @@ class Video extends Model
         'file_path',
         'is_sent',
         'is_approved',
+        'is_program'
     ];
 
     public function user()
