@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('first_amount');
             $table->integer('second_amount');
             $table->integer('third_amount');
+            $table->integer('income_program');
             $table->timestamps();
         });
     }

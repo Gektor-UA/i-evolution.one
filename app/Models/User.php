@@ -61,6 +61,11 @@ class User extends Authenticatable
         return $this->hasMany(Video::class);
     }
 
+    public function programs()
+    {
+        return $this->belongsToMany(Program::class, 'programs_user', 'user_id', 'program_id')->withTimestamps();
+    }
+
 
 
 
