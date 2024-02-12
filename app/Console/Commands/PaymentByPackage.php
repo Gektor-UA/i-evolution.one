@@ -31,14 +31,14 @@ class PaymentByPackage extends Command
     public function handle()
     {
         $videos = Video::where('updated_at', '<=', now()->subDays(2))->get();
-        \Log::info('videos: '.json_encode($videos));
+//        \Log::info('videos: '.json_encode($videos));
 
         foreach ($videos as $video) {
             $userProgram = ProgramsUser::where('user_id', $video->user_id)->first();
-            \Log::info('$userProgram: '.json_encode($userProgram));
+//            \Log::info('$userProgram: '.json_encode($userProgram));
 
             $program = Program::where('id', $userProgram->program_id)->first();
-            \Log::info('$program: '.json_encode($program));
+//            \Log::info('$program: '.json_encode($program));
 
             if ($program && $program->income_program) {
                 $userPurse = Purse::where('user_id', $video->user_id)->first();
