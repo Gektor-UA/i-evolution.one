@@ -12,6 +12,8 @@ class Transaction extends Model
     const REFILL = 1;
     const WITHDRAWAL = 2;
     const SINGLE_REFERRAL_BONUS = 3;
+    const WITHDRAWAL_PACKAGE = 4;
+    const PAYMENT_BY_PACKAGE = 5;
 
     protected $table = 'transactions';
     protected $fillable = [
