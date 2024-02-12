@@ -48,3 +48,6 @@ Route::post('/submit-youtube-link', [App\Http\Controllers\VideoController::class
 Route::get('/download-video/{id}', [App\Http\Controllers\VideoController::class, 'downloadVideo'])->name('downloadVideo');
 Route::post('/approve-video/{id}', [App\Http\Controllers\VideoController::class, 'approveVideo'])->name('approveVideo');
 Route::post('/reject-video/{id}', [App\Http\Controllers\VideoController::class, 'rejectVideo'])->name('rejectVideo');
+
+//Вибір програми
+Route::post('/save-package', [\App\Http\Controllers\ProgramsUserController::class, 'savePackage'])->name('savePackage');
