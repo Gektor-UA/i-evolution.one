@@ -13,6 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+//        $schedule->command('check-confirmation-time')->hourly();
+        $schedule->command('video:check-confirmation-time')->everyMinute();
+
     }
 
     /**
