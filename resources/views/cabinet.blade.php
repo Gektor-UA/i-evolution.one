@@ -42,9 +42,18 @@
             @if($video)
                 <div class="packages-list">
                     <div class="row">
-                    <div class="packages-list__item col-4">ПРОГРАМА 70$</div>
-                    <div class="packages-list__item col-4">ПРОГРАМА 140$</div>
-                    <div class="packages-list__item col-4">ПРОГРАМА 420$</div>
+                        <div class="packages-list__item col-4">
+                            <span>ПРОГРАМА 70$</span>
+                            <button class="select-package-btn" data-package-id="1">Вибрати</button>
+                        </div>
+                        <div class="packages-list__item col-4">
+                            <span>ПРОГРАМА 140$</span>
+                            <button class="select-package-btn" data-package-id="2">Вибрати</button>
+                        </div>
+                        <div class="packages-list__item col-4">
+                            <span>ПРОГРАМА 420$</span>
+                            <button class="select-package-btn" data-package-id="3">Вибрати</button>
+                        </div>
                     </div>
                 </div>
             @endif
@@ -81,6 +90,45 @@
             document.body.removeChild(input);
 
             return false;
+        });
+
+
+
+    // Вибір програми
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectPackageBtns = document.querySelectorAll('.select-package-btn');
+            selectPackageBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // const packageId = this.getAttribute('data-package-id');
+                    const packageId = parseInt(this.getAttribute('data-package-id'));
+                    selectPackage(packageId);
+                });
+            });
+
+            function selectPackage(packageId) {
+                console.log(typeof packageId);
+                fetch('/save-package', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ package_id: packageId })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Обробка успішної відповіді
+                            alert('Пакет успішно вибрано!');
+                        } else {
+                            // Обробка помилки
+                            alert('Помилка вибору пакета. Спробуйте ще раз.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Помилка:', error);
+                        alert('Помилка вибору пакета. Спробуйте ще раз.');
+                    });
+            }
         });
     </script>
 @endsection
