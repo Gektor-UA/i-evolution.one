@@ -15,6 +15,17 @@ class CabinetController extends Controller
     {
         // Перевірка чи підтверджено відео, якщо так то відкриється блок з вибором програм
         $user_id = Auth::id();
+
+        $blockForm = Video::where('user_id', $user_id)
+            ->where(function ($query) {
+                $query->whereNull('is_program')->orWhere('is_program', 0);
+            })
+            ->first();
+
+        $selectVideo = Video::where('user_id', $user_id)
+            ->where('is_approved', null)
+            ->first();
+
         $video = Video::where('user_id', $user_id)
             ->where('is_approved', 1)
             ->where(function ($query) {
@@ -23,13 +34,15 @@ class CabinetController extends Controller
             ->first();
 
         // Вивід балансу на сторінку
-        $balbance = Purse::where('user_id', $user_id)
+        $balance = Purse::where('user_id', $user_id)
             ->where('wallet_type', 1)
             ->first();
 
-        return view('cabinet',
-            ['video' => $video],
-            ['balance' => $balbance]
-        );
+        return view('cabinet', [
+            'video' => $video,
+            'balance' => $balance,
+            'blockForm' => $blockForm,
+            'selectVideo' => $selectVideo,
+        ]);
     }
 }
