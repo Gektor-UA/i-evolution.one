@@ -106,7 +106,7 @@ main {
 }
 
 .nav {
-    width: calc(100% - 260px);
+    /*width: calc(100% - 260px);*/
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -145,6 +145,9 @@ main {
     color: #F0BF48;
     background-color: transparent;
     transition: all .3s ease-in-out;
+}
+.auth button {
+    background-color: transparent;
 }
 
 .auth a:hover, .auth button:hover {

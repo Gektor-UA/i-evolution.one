@@ -8,8 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Trade 24</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
 </head>
 
@@ -25,26 +25,30 @@
 
             </div>
             <nav class="nav">
-                <ul class="menu">
-                    <li><a href="#">Header</a></li>
-                    <li><a href="#">Header</a></li>
-                    <li><a href="#">Header</a></li>
-                    <li><a href="#">Header</a></li>
-                </ul>
+{{--                <ul class="menu">--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                </ul>--}}
                 <ul class="auth">
                     @auth
-                        <li>
+                        <li class="d-flex gap-3 text-white">
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit">Вийти</button>
+                                <button type="submit">Выйти</button>
+                            </form>
+                            <form action="{{ route('cabinet') }}" method="GET">
+                                @csrf
+                                <button type="submit">Кабинет</button>
                             </form>
                         </li>
                     @else
                         <li>
-                            <a class="{{ request()->is('register') ? 'active' : '' }}" href="{{ route('register') }}">{{ __('Реєстрація') }}</a>
+                            <a class="{{ request()->is('register') ? 'active' : '' }}" href="{{ route('register') }}">{{ __('Регистрация') }}</a>
                         </li>
                         <li>
-                            <a class="{{ request()->is('login') ? 'active' : '' }}" href="{{ route('login') }}">{{ __('Авторизація') }}</a>
+                            <a class="{{ request()->is('login') ? 'active' : '' }}" href="{{ route('login') }}">{{ __('Авторизация') }}</a>
                         </li>
                     @endauth
                 </ul>
@@ -59,6 +63,7 @@
     {{-- <footer class="footer">
         FOOTER
     </footer> --}}
+
 
 </div>
 
