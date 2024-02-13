@@ -55,7 +55,6 @@
                     <button class="forms__youtube__btn" type="submit">{{ __('Submit') }}</button>
                 </form>
             </div>
-
         </div>
     </div>
 
