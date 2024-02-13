@@ -17,6 +17,9 @@ class CabinetController extends Controller
         $user_id = Auth::id();
         $video = Video::where('user_id', $user_id)
             ->where('is_approved', 1)
+            ->where(function ($query) {
+                $query->whereNull('is_program')->orWhere('is_program', 0);
+            })
             ->first();
 
         // Вивід балансу на сторінку
