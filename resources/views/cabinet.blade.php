@@ -68,6 +68,9 @@
                 </div>
             @endif
 
+{{--            @foreach ($referrals as $referral)--}}
+{{--                <p>{{ $referral }}</p>--}}
+{{--            @endforeach--}}
 
             {{--            <div class="statistic-problem">--}}
             {{--                <button--}}
