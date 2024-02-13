@@ -229,8 +229,8 @@ main {
     font-size: 16px;
     color: #EDE6EE;
     background: #27002A;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: #EDE6EE;
+    /* -webkit-background-clip: text;
+    -webkit-text-fill-color: #EDE6EE; */
     outline: 0;
     transition: all 0.3s ease-in-out;
 }
@@ -239,6 +239,12 @@ main {
 .auth__form__input:focus {
     border: 1px solid #F0BF48;
     box-shadow: 0px 0px 4px 0px #F0BF48;
+}
+
+
+.auth__form__input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #27002A inset !important;
+    -webkit-text-fill-color: #EDE6EE !important;
 }
 
 .form__submit {
