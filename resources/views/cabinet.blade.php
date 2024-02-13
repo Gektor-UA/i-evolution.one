@@ -35,129 +35,48 @@
                     </div>
                 </div>
             @endif
+
+            <form class="forms__video" action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                <input class="forms__video__input" type="file" name="video" accept="video/*" required>
+                <button class="forms__video__btn" type="submit">Upload Video</button>
+            </form>
+
+            <div class="youtube__inner">
+                <div class="i__health__link__inner">
+                    <a href="" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
+                </div>
+                <form class="forms__youtube" action="{{ route('submitYouTubeLink') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                    {{-- <label for="youtubeLink">YouTube Link:</label> --}}
+                    <input class="forms__youtube__input" type="text" name="youtubeLink" id="youtubeLink" required>
+                    <button class="forms__youtube__btn" type="submit">{{ __('Submit') }}</button>
+                </form>
+            </div>
+
         </div>
     </div>
 
-    <style>
-        .cabinet__inner {
-            background: #27002A;
-            height: 100%;
-            min-height: calc(100svh - 152px);
-            width: 100%;
-            padding: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cabinet__item {
-            width: 100%;
-            max-width: 1100px;
-            padding: 0 30px;
-        }
-
-        .balance__inner {
-            padding: 20px;
-            border-radius: 10px;
-            background: #B899BA;
-            margin-bottom: 32px;
-        }
-
-        .balance__title {
-            font-size: 20px;
-            font-weight: 600;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #000000;
-            margin-bottom: 50px;
-        }
-
-        .balance__text {
-            font-size: 16px;
-            color: #000000;
-            margin-bottom: 6px;
-        }
-
-        .balance__item {
-            width: 100%;
-            height: 157px;
-            padding: 60px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #27002A;
-        }
-
-        .balance__sum {
-            font-size: 42px;
-            font-weight: 400;
-            color: #EDE6EE;
-        }
-
-        .packages__list {
-            padding: 20px;
-            display: flex;
-            background-color: #B899BA;
-            flex-wrap: wrap;
-            gap: 20px;
-            border-radius: 20px;
-            margin-bottom: 32px;
-        }
-
-        .packages__item {
-            width: calc(100% / 3 - 20px);
-            background: #27002A;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .packages__item p{
-            font-size: 16px;
-            font-weight: 400;
-            color: #EDE6EE;
-            margin-bottom: 10px;
-        }
-
-        .select-package-btn {
-            background: #F0BF48;
-            padding: 15px 40px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #000000;
-            box-shadow: 0px 0px 4px 0px #F0BF48;
-            border: 1px solid #F0BF48;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .select-package-btn:hover {
-            background: transparent;
-            color: #EDE6EE;
-        }
-
-    </style>
-
-    <div class="main-alerts">
+    {{-- <div class="main-alerts">
         <div class="container">
             <div class="i-health__inner">
                 <h2 class="section-heading">I-Health</h2>
                 <a href="" class="btn-primary color-white" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
             </div>
 
-            <div class="forms-video" style="position: relative">
+            <div class="forms-video" style="position: relative"> --}}
                 <!-- Форма для завантаження відео -->
-                <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
+                {{-- <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <input type="file" name="video" accept="video/*" required>
                     <button type="submit">Upload Video</button>
-                </form>
+                </form> --}}
 
                 <!-- Форма для введення посилання на YouTube -->
-                <form action="{{ route('submitYouTubeLink') }}" method="post">
+                {{-- <form action="{{ route('submitYouTubeLink') }}" method="post">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <label for="youtubeLink">YouTube Link:</label>
@@ -195,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif --}}
 
 
             {{--            <div class="statistic-problem">--}}
@@ -208,8 +127,8 @@
             {{--                </button>--}}
             {{--            </div>--}}
 
-        </div>
-    </div>
+        {{-- </div>
+    </div> --}}
 
 
 
