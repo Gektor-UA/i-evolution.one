@@ -2,7 +2,9 @@
 
 @section('content')
 
-    <h1>СТАРТОВА СТОРІНКА</h1>
+    <div class="home__img">
+        <img src="{{ asset('img/mainImg.png') }}" alt="mainImg">
+    </div>
 
 
 {{--    @foreach ($users as $user)--}}
