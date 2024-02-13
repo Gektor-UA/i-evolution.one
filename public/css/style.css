@@ -93,7 +93,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 30px 30px 0;
+    margin: 30px;
     padding: 0 26px;
     border-radius: 10px;
     background: #00000033;
@@ -180,6 +180,8 @@ main {
 .main {
     display: flex;
     align-items: center;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .auth__container {
@@ -278,4 +280,17 @@ main {
 
 .home__img {
     width: 100%;
+}
+
+/* cabinet */
+
+.cabinet__title {
+    font-family: "Roboto Slab";
+    font-size: 45px;
+    font-weight: 400;
+    letter-spacing: 0em;
+    color: #F0BF48;
+    text-shadow: 0px 0px 10px rgba(240, 191, 72, 1);
+    text-align: center;
+    margin-bottom: 32px;
 }
