@@ -20,6 +20,12 @@ class RegistrationController extends Controller
         return view('auth.register');
     }
 
+    /**
+     * Реєстрація нового користувача
+     *
+     * @param Request $request
+     * @return redirect
+     */
     public function create(Request $request)
     {
         // Валидація даних
@@ -30,7 +36,7 @@ class RegistrationController extends Controller
         ]);
 
         // Створення нового користувача
-        $NewUser = User::create([
+        $newUser = User::create([
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'email' => $request['email'],
@@ -42,7 +48,7 @@ class RegistrationController extends Controller
 
         // Створення гаманця
         Purse::create([
-            'user_id' => $NewUser->id,
+            'user_id' => $newUser->id,
             'amount' => 0,
             'wallet_type' => Purse::I_HEALTH_PURSE,
             'percent' => 0,
@@ -52,12 +58,15 @@ class RegistrationController extends Controller
         $RefUser = User::where('referrer_hash', '=', Cookie::get('referrerHash'))->first();
         if (!empty($RefUser)) {
             ReferralsUser::create([
-                'user_id' => $NewUser->id,
+                'user_id' => $newUser->id,
                 'referral_id' => $RefUser->id]
             );
         }
 
-        return redirect('/')->with('success', 'Ви успішно зареєструвалися!');
+        // Автентифікація користувача
+        Auth::login($newUser);
+
+        return redirect('/cabinet')->with('success', 'Ви успішно зареєструвалися!');
     }
 
     public function logout()

@@ -101,7 +101,7 @@ class VideoController extends Controller
      */
     public function rejectVideo($id)
     {
-        Video::findOrFail($id)->update(['is_approved' => 0]);
+        Video::findOrFail($id)->update(['is_approved' => 0, 'is_program' => 1]);
 
         return redirect()->back()->with('success', 'Відео відхилено');
     }
