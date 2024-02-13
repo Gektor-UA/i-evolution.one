@@ -14,6 +14,7 @@ class Transaction extends Model
     const SINGLE_REFERRAL_BONUS = 3;
     const WITHDRAWAL_PACKAGE = 4;
     const PAYMENT_BY_PACKAGE = 5;
+    const WITHDRAWAL_PACKAGE_PENALTY = 6;
 
     protected $table = 'transactions';
     protected $fillable = [
