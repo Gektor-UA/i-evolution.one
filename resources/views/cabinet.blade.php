@@ -8,13 +8,14 @@
                 <a href="" class="btn-primary color-white" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
             </div>
 
+
             <div class="forms-video" style="position: relative">
                 <!-- Форма для завантаження відео -->
                 <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <input type="file" name="video" accept="video/*" required>
-                    <button type="submit">Upload Video</button>
+                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Upload Video</button>
                 </form>
 
                 <!-- Форма для введення посилання на YouTube -->
@@ -23,10 +24,16 @@
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <label for="youtubeLink">YouTube Link:</label>
                     <input type="text" name="youtubeLink" id="youtubeLink" required>
-                    <button type="submit">Submit YouTube Link</button>
+                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Submit YouTube Link</button>
                 </form>
             </div>
 
+
+            @if($selectVideo)
+                <div class="alert alert-primary" role="alert">
+                    Your video has been sent for verification
+                </div>
+            @endif
 
             <div class="card-wrap mb-4">
                 <div class="card card-balance">
@@ -41,6 +48,9 @@
 
             @if($video)
                 <div class="packages-list">
+                    <div class="alert alert-success" role="alert">
+                        Your video has been approved
+                    </div>
                     <div class="row">
                         <div class="packages-list__item col-4">
                             <span>ПРОГРАМА 70$</span>
@@ -58,6 +68,9 @@
                 </div>
             @endif
 
+{{--            @foreach ($referrals as $referral)--}}
+{{--                <p>{{ $referral }}</p>--}}
+{{--            @endforeach--}}
 
             {{--            <div class="statistic-problem">--}}
             {{--                <button--}}
