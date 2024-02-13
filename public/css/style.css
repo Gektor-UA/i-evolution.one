@@ -1,3 +1,169 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  background: #4E0053;
+  font-family: "Geologica", serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0em;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+article > * + * {
+  margin-top: 1em;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+#site {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+}
+
+main {
+    flex: 1;
+}
+
+/* header */
+
+.header__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 30px 0;
+    padding: 0 26px;
+    border-radius: 10px;
+    background: #00000033;
+    gap: 60px;
+}
+
+.logo__inner {
+    width: 200px;
+    margin: 20px 0;
+}
+
+.nav {
+    width: calc(100% - 260px);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.menu, .auth {
+    display: flex;
+    height: 50px;
+    align-items: center;
+}
+
+.menu {
+    gap: 10px;
+}
+
+.menu a {
+    padding: 15px 40px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all .3s ease-in-out;
+    color: #F0BF48;
+}
+
+.menu a:hover {
+    border: 1px solid #F0BF48;
+}
+
+.auth {
+    gap: 22px;
+}
+
+.auth a {
+    padding: 15px 40px;
+    border-radius: 10px;
+    border: 1px solid #F0BF48;
+    color: #F0BF48;
+    transition: all .3s ease-in-out;
+}
+
+.auth a:hover {
+    color: #000000;
+    background-color: #F0BF48;
+}
+
+.auth a.active {
+    color: #000000;
+    background-color: #F0BF48;
+}
+
+.auth a.active:hover {
+    color: #F0BF48;
+    background-color: transparent;
+}
+
+
+/* packages */
+
 .packages-list__item {
     text-align: center;
     font-size: 24px;

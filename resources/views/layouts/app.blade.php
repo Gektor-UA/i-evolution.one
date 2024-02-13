@@ -9,32 +9,47 @@
     <title>Trade 24</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 <div id="site">
 
     <header class="header">
-        HEADER
-        <br>
-        <br>
-        <br>
-        <nav>
-            <ul>
-                @auth
-                    <li>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit">Вийти</button>
-                        </form>
-                    </li>
-                @else
-                    <li><a href="{{ route('register') }}">Реєстрація</a></li>
-                    <li><a href="{{ route('login') }}">Авторизація</a></li>
-                @endauth
-            </ul>
-        </nav>
+        <div class="header__inner">
+            <div class="logo__inner">
+                    <a href="{{ route('index') }}">
+                        <img src="{{ asset('img/logo.png') }}" alt="logo">
+                    </a>
+
+            </div>
+            <nav class="nav">
+                <ul class="menu">
+                    <li><a href="#">Header</a></li>
+                    <li><a href="#">Header</a></li>
+                    <li><a href="#">Header</a></li>
+                    <li><a href="#">Header</a></li>
+                </ul>
+                <ul class="auth">
+                    @auth
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit">Вийти</button>
+                            </form>
+                        </li>
+                    @else
+                        <li>
+                            <a class="{{ request()->is('register') ? 'active' : '' }}" href="{{ route('register') }}">{{ __('Реєстрація') }}</a>
+                        </li>
+                        <li>
+                            <a class="{{ request()->is('login') ? 'active' : '' }}" href="{{ route('login') }}">{{ __('Авторизація') }}</a>
+                        </li>
+                    @endauth
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main class="main">
