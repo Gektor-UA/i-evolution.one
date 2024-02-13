@@ -12,11 +12,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // $schedule->command('inspire')->hourly();`
 //        $schedule->command('video:check-confirmation-time')->hourly();
 //        $schedule->command('video:payment-by-package')->hourly();
+
+
+
         $schedule->command('video:check-confirmation-time')->everyMinute();
         $schedule->command('video:payment-by-package')->everyMinute();
+//        $schedule->command('app:partner-program-for-other-users')->everyMinute();
 
     }
 
