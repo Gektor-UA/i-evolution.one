@@ -105,7 +105,9 @@ class CheckVideoConfirmationTime extends Command
 
     protected function closeProgramWithPenalty($userProgram, $userPurse, $video)
     {
-        $amountToWithdraw = ProgramsUser::where('user_id', $video->user_id)->first()->total_amount;
+        $amountToWithdraw = ProgramsUser::where('user_id', $video->user_id)
+            ->whereNull('payment_program')
+            ->first()->total_amount;
         // Штраф складає 30% від суми, яку вже списано з балансу
         $penaltyAmount = $amountToWithdraw * 0.3;
         $amountToWithdraw -= $penaltyAmount;
