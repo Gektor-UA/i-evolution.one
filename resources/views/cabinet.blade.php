@@ -1,37 +1,95 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="main-alerts">
+    <div class="cabinet__inner">
+        <div class="cabinet__item">
+            <h1 class="cabinet__title">{{ __('I-Health') }}</h1>
+            <div class="balance__inner">
+                <h2 class="balance__title">{{ __('Ваш баланс:') }}</h2>
+
+                <div class="balance__income">
+                    <div class="balance__box">
+                        <p class="balance__text">{{ __('Баланс') }}</p>
+                        <div class="balance__item">
+                            <p class="balance__sum">{{ $balance->amount }} $</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if($video)
+                <div class="packages__list">
+                    <div class="packages__item">
+                        <p>{{ __('ПРОГРАМА 70$') }}</p>
+                        <button class="select-package-btn" data-package-id="1">{{ __('Вибрати') }}</button>
+                    </div>
+
+                    <div class="packages__item">
+                        <p>{{ __('ПРОГРАМА 140$') }}</p>
+                        <button class="select-package-btn" data-package-id="2">{{ __('Вибрати') }}</button>
+                    </div>
+
+                    <div class="packages__item">
+                        <p>{{ __('ПРОГРАМА 420$') }}</p>
+                        <button class="select-package-btn" data-package-id="3">{{ __('Вибрати') }}</button>
+                    </div>
+                </div>
+            @endif
+
+            <form class="forms__video" action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                <input class="forms__video__input" type="file" name="video" accept="video/*" required>
+                <button class="forms__video__btn" {{ $blockForm ? 'disabled' : '' }} type="submit">Upload Video</button>
+            </form>
+
+            <div class="youtube__inner">
+                <div class="i__health__link__inner">
+                    <a href="" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
+                </div>
+                <form class="forms__youtube" action="{{ route('submitYouTubeLink') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                    {{-- <label for="youtubeLink">YouTube Link:</label> --}}
+                    <input class="forms__youtube__input" type="text" name="youtubeLink" id="youtubeLink" required>
+                    <button class="forms__youtube__btn" type="submit">{{ __('Submit') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- <div class="main-alerts">
         <div class="container">
             <div class="i-health__inner">
                 <h2 class="section-heading">I-Health</h2>
                 <a href="" class="btn-primary color-white" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
             </div>
 
-
-            <div class="forms-video" style="position: relative">
+            <div class="forms-video" style="position: relative"> --}}
                 <!-- Форма для завантаження відео -->
-                <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
+                {{-- <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                    <input type="file" name="video" accept="video/*" required>
-                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Upload Video</button>
+                    <button onclick="document.getElementById('fileInput').click()" {{ $blockForm ? 'disabled' : '' }}>Загрузить видео</button>
+                    <span id="fileName"></span>
+                    <input type="file" id="fileInput" name="video" accept="video/*" style="position: absolute; left: -9999px; opacity: 0;" onchange="displayFileName(this)" required>
+                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Отправить</button>
                 </form>
 
                 <!-- Форма для введення посилання на YouTube -->
-                <form action="{{ route('submitYouTubeLink') }}" method="post">
+                {{-- <form action="{{ route('submitYouTubeLink') }}" method="post">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                    <label for="youtubeLink">YouTube Link:</label>
+                    <label for="youtubeLink">Ссылка на YouTube:</label>
                     <input type="text" name="youtubeLink" id="youtubeLink" required>
-                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Submit YouTube Link</button>
+                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Отправить</button>
                 </form>
             </div>
 
 
             @if($selectVideo)
                 <div class="alert alert-primary" role="alert">
-                    Your video has been sent for verification
+                    Ваше видео отправлено на проверку.
                 </div>
             @endif
 
@@ -49,24 +107,26 @@
             @if($video)
                 <div class="packages-list">
                     <div class="alert alert-success" role="alert">
-                        Your video has been approved
+                        Ваше видео одобрено
                     </div>
                     <div class="row">
                         <div class="packages-list__item col-4">
-                            <span>ПРОГРАМА 70$</span>
-                            <button class="select-package-btn" data-package-id="1">Вибрати</button>
+                            <span>ПРОГРАММА 70$</span>
+                            <button class="select-package-btn" data-package-id="1">Выбрать</button>
                         </div>
                         <div class="packages-list__item col-4">
-                            <span>ПРОГРАМА 140$</span>
-                            <button class="select-package-btn" data-package-id="2">Вибрати</button>
+                            <span>ПРОГРАММА 140$</span>
+                            <button class="select-package-btn" data-package-id="2">Выбрать</button>
                         </div>
                         <div class="packages-list__item col-4">
-                            <span>ПРОГРАМА 420$</span>
-                            <button class="select-package-btn" data-package-id="3">Вибрати</button>
+                            <span>ПРОГРАММА 420$</span>
+                            <button class="select-package-btn" data-package-id="3">Выбрать</button>
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif --}}
+
+            <div id="programInfo"></div>
 
 {{--            @foreach ($referrals as $referral)--}}
 {{--                <p>{{ $referral }}</p>--}}
@@ -82,44 +142,76 @@
             {{--                </button>--}}
             {{--            </div>--}}
 
-        </div>
-    </div>
+        {{-- </div>
+    </div> --}}
 
 
 
 
-{{--  Копіювання рефералки в буфер обміну  --}}
     <script>
+        // Копіювання рефералки в буфер обміну
         document.getElementById('iHealthRefLink').addEventListener('click', function() {
-            var refLink = this.getAttribute('data-ref-link');
-
-            var input = document.createElement('textarea');
+            const refLink = this.getAttribute('data-ref-link');
+            const input = document.createElement('textarea');
             input.value = refLink;
             document.body.appendChild(input);
-
             input.select();
-            var result = document.execCommand('copy');
-
+            const result = document.execCommand('copy');
             document.body.removeChild(input);
-
             return false;
         });
 
+        // Завантаження відео, відображення назви файлу
+        function displayFileName(input) {
+            const fileNameElement = document.getElementById('fileName');
+            if (input.files.length > 0) {
+                const fileName = input.files[0].name;
+                fileNameElement.textContent = `Файл: ${fileName}`;
+            } else {
+                fileNameElement.textContent = '';
+            }
+        }
 
-
-    // Вибір програми
+        // Вибір програми
         document.addEventListener('DOMContentLoaded', function() {
+            function getSelectedProgram() {
+                fetch('/get-selected-program')
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Неможливо отримати дані про вибрану програму.');
+                        }
+                    })
+                    .then(data => {
+                        if (data && data.program) {
+                            console.log(data.program);
+                            const programInfoElement = document.getElementById('programInfo');
+                            programInfoElement.innerHTML = `
+                        <p>Ваша программа: ${data.program.program_name}</p>
+                        <p>Первое списание: ${data.program.first_amount}</p>
+                        <p>Второе списание: ${data.program.second_amount}</p>
+                        <p>Третье списание: ${data.program.third_amount}</p>
+                        <p>Доход: ${data.program.income_program}</p>
+                    `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Помилка:', error);
+                    });
+            }
+
+            getSelectedProgram();
+
             const selectPackageBtns = document.querySelectorAll('.select-package-btn');
             selectPackageBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // const packageId = this.getAttribute('data-package-id');
                     const packageId = parseInt(this.getAttribute('data-package-id'));
                     selectPackage(packageId);
                 });
             });
 
             function selectPackage(packageId) {
-                console.log(typeof packageId);
                 fetch('/save-package', {
                     method: 'POST',
                     headers: {
@@ -130,19 +222,18 @@
                 })
                     .then(response => {
                         if (response.ok) {
-                            // Обробка успішної відповіді
+                            getSelectedProgram();
                             alert('Пакет успішно вибрано!');
                         } else {
-                            // Обробка помилки
-                            alert('Помилка вибору пакета. Спробуйте ще раз.');
+                            throw new Error('Неможливо змінити програму після першого списання.');
                         }
                     })
                     .catch(error => {
                         console.error('Помилка:', error);
-                        alert('Помилка вибору пакета. Спробуйте ще раз.');
+                        alert(error.message || 'Помилка вибору пакета. Спробуйте ще раз.');
                     });
             }
-        });
+            });
     </script>
 @endsection
 

@@ -30,7 +30,7 @@ class PaymentByPackage extends Command
      */
     public function handle()
     {
-        $videos = Video::where('updated_at', '<=', now()->subDays(2))->get();
+        $videos = Video::where('updated_at', '<=', now()->subDays(3))->get();
 //        \Log::info('videos: '.json_encode($videos));
 
         foreach ($videos as $video) {
