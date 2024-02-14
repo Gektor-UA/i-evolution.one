@@ -70,24 +70,26 @@
                 {{-- <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                    <input type="file" name="video" accept="video/*" required>
-                    <button type="submit">Upload Video</button>
-                </form> --}}
+                    <button onclick="document.getElementById('fileInput').click()" {{ $blockForm ? 'disabled' : '' }}>Загрузить видео</button>
+                    <span id="fileName"></span>
+                    <input type="file" id="fileInput" name="video" accept="video/*" style="position: absolute; left: -9999px; opacity: 0;" onchange="displayFileName(this)" required>
+                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Отправить</button>
+                </form>
 
                 <!-- Форма для введення посилання на YouTube -->
                 {{-- <form action="{{ route('submitYouTubeLink') }}" method="post">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                    <label for="youtubeLink">YouTube Link:</label>
+                    <label for="youtubeLink">Ссылка на YouTube:</label>
                     <input type="text" name="youtubeLink" id="youtubeLink" required>
-                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Submit YouTube Link</button>
+                    <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Отправить</button>
                 </form>
             </div>
 
 
             @if($selectVideo)
                 <div class="alert alert-primary" role="alert">
-                    Your video has been sent for verification
+                    Ваше видео отправлено на проверку.
                 </div>
             @endif
 
@@ -105,24 +107,26 @@
             @if($video)
                 <div class="packages-list">
                     <div class="alert alert-success" role="alert">
-                        Your video has been approved
+                        Ваше видео одобрено
                     </div>
                     <div class="row">
                         <div class="packages-list__item col-4">
-                            <span>ПРОГРАМА 70$</span>
-                            <button class="select-package-btn" data-package-id="1">Вибрати</button>
+                            <span>ПРОГРАММА 70$</span>
+                            <button class="select-package-btn" data-package-id="1">Выбрать</button>
                         </div>
                         <div class="packages-list__item col-4">
-                            <span>ПРОГРАМА 140$</span>
-                            <button class="select-package-btn" data-package-id="2">Вибрати</button>
+                            <span>ПРОГРАММА 140$</span>
+                            <button class="select-package-btn" data-package-id="2">Выбрать</button>
                         </div>
                         <div class="packages-list__item col-4">
-                            <span>ПРОГРАМА 420$</span>
-                            <button class="select-package-btn" data-package-id="3">Вибрати</button>
+                            <span>ПРОГРАММА 420$</span>
+                            <button class="select-package-btn" data-package-id="3">Выбрать</button>
                         </div>
                     </div>
                 </div>
             @endif --}}
+
+            <div id="programInfo"></div>
 
 {{--            @foreach ($referrals as $referral)--}}
 {{--                <p>{{ $referral }}</p>--}}
@@ -144,38 +148,70 @@
 
 
 
-{{--  Копіювання рефералки в буфер обміну  --}}
     <script>
+        // Копіювання рефералки в буфер обміну
         document.getElementById('iHealthRefLink').addEventListener('click', function() {
-            var refLink = this.getAttribute('data-ref-link');
-
-            var input = document.createElement('textarea');
+            const refLink = this.getAttribute('data-ref-link');
+            const input = document.createElement('textarea');
             input.value = refLink;
             document.body.appendChild(input);
-
             input.select();
-            var result = document.execCommand('copy');
-
+            const result = document.execCommand('copy');
             document.body.removeChild(input);
-
             return false;
         });
 
+        // Завантаження відео, відображення назви файлу
+        function displayFileName(input) {
+            const fileNameElement = document.getElementById('fileName');
+            if (input.files.length > 0) {
+                const fileName = input.files[0].name;
+                fileNameElement.textContent = `Файл: ${fileName}`;
+            } else {
+                fileNameElement.textContent = '';
+            }
+        }
 
-
-    // Вибір програми
+        // Вибір програми
         document.addEventListener('DOMContentLoaded', function() {
+            function getSelectedProgram() {
+                fetch('/get-selected-program')
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Неможливо отримати дані про вибрану програму.');
+                        }
+                    })
+                    .then(data => {
+                        if (data && data.program) {
+                            console.log(data.program);
+                            const programInfoElement = document.getElementById('programInfo');
+                            programInfoElement.innerHTML = `
+                        <p>Ваша программа: ${data.program.program_name}</p>
+                        <p>Первое списание: ${data.program.first_amount}</p>
+                        <p>Второе списание: ${data.program.second_amount}</p>
+                        <p>Третье списание: ${data.program.third_amount}</p>
+                        <p>Доход: ${data.program.income_program}</p>
+                    `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Помилка:', error);
+                    });
+            }
+
+            getSelectedProgram();
+
             const selectPackageBtns = document.querySelectorAll('.select-package-btn');
             selectPackageBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // const packageId = this.getAttribute('data-package-id');
                     const packageId = parseInt(this.getAttribute('data-package-id'));
                     selectPackage(packageId);
                 });
             });
 
             function selectPackage(packageId) {
-                console.log(typeof packageId);
                 fetch('/save-package', {
                     method: 'POST',
                     headers: {
@@ -186,19 +222,18 @@
                 })
                     .then(response => {
                         if (response.ok) {
-                            // Обробка успішної відповіді
+                            getSelectedProgram();
                             alert('Пакет успішно вибрано!');
                         } else {
-                            // Обробка помилки
-                            alert('Помилка вибору пакета. Спробуйте ще раз.');
+                            throw new Error('Неможливо змінити програму після першого списання.');
                         }
                     })
                     .catch(error => {
                         console.error('Помилка:', error);
-                        alert('Помилка вибору пакета. Спробуйте ще раз.');
+                        alert(error.message || 'Помилка вибору пакета. Спробуйте ще раз.');
                     });
             }
-        });
+            });
     </script>
 @endsection
 
