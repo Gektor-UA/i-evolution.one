@@ -14,12 +14,10 @@
                 <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-{{--                    <input type="file" name="video" accept="video/*" required>--}}
                     <button onclick="document.getElementById('fileInput').click()" {{ $blockForm ? 'disabled' : '' }}>Загрузить видео</button>
                     <span id="fileName"></span>
-                    <input type="file" id="fileInput" name="video" accept="video/*" style="display: none" onchange="displayFileName(this)" required>
+                    <input type="file" id="fileInput" name="video" accept="video/*" style="position: absolute; left: -9999px; opacity: 0;" onchange="displayFileName(this)" required>
                     <button type="submit" {{ $blockForm ? 'disabled' : '' }}>Отправить</button>
-
                 </form>
 
                 <!-- Форма для введення посилання на YouTube -->
@@ -72,6 +70,8 @@
                 </div>
             @endif
 
+            <div id="programInfo"></div>
+
 {{--            @foreach ($referrals as $referral)--}}
 {{--                <p>{{ $referral }}</p>--}}
 {{--            @endforeach--}}
@@ -92,41 +92,20 @@
 
 
 
-{{--  Копіювання рефералки в буфер обміну  --}}
     <script>
+        // Копіювання рефералки в буфер обміну
         document.getElementById('iHealthRefLink').addEventListener('click', function() {
-            var refLink = this.getAttribute('data-ref-link');
-
-            var input = document.createElement('textarea');
+            const refLink = this.getAttribute('data-ref-link');
+            const input = document.createElement('textarea');
             input.value = refLink;
             document.body.appendChild(input);
-
             input.select();
-            var result = document.execCommand('copy');
-
+            const result = document.execCommand('copy');
             document.body.removeChild(input);
-
             return false;
         });
 
-
-
-        // Завантаження відео
-        // Отримуємо посилання на елементи кнопки та інпуту файлу
-        const uploadButton = document.getElementById('uploadButton');
-        const fileInput = document.getElementById('fileInput');
-
-        // Встановлюємо текст кнопки
-        uploadButton.innerText = 'Завантажити відео';
-
-        // Встановлюємо плейсхолдер інпуту файлу
-        fileInput.placeholder = 'Виберіть відео для завантаження';
-
-        // Додаємо обробник події для кліку на кнопку
-        uploadButton.addEventListener('click', function() {
-            // Симулюємо клік на інпут файлу, коли кнопка натиснута
-            fileInput.click();
-        });
+        // Завантаження відео, відображення назви файлу
         function displayFileName(input) {
             const fileNameElement = document.getElementById('fileName');
             if (input.files.length > 0) {
@@ -137,21 +116,46 @@
             }
         }
 
-
-
-    // Вибір програми
+        // Вибір програми
         document.addEventListener('DOMContentLoaded', function() {
+            function getSelectedProgram() {
+                fetch('/get-selected-program')
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Неможливо отримати дані про вибрану програму.');
+                        }
+                    })
+                    .then(data => {
+                        if (data && data.program) {
+                            console.log(data.program);
+                            const programInfoElement = document.getElementById('programInfo');
+                            programInfoElement.innerHTML = `
+                        <p>Ваша программа: ${data.program.program_name}</p>
+                        <p>Первое списание: ${data.program.first_amount}</p>
+                        <p>Второе списание: ${data.program.second_amount}</p>
+                        <p>Третье списание: ${data.program.third_amount}</p>
+                        <p>Доход: ${data.program.income_program}</p>
+                    `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Помилка:', error);
+                    });
+            }
+
+            getSelectedProgram();
+
             const selectPackageBtns = document.querySelectorAll('.select-package-btn');
             selectPackageBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // const packageId = this.getAttribute('data-package-id');
                     const packageId = parseInt(this.getAttribute('data-package-id'));
                     selectPackage(packageId);
                 });
             });
 
             function selectPackage(packageId) {
-                console.log(typeof packageId);
                 fetch('/save-package', {
                     method: 'POST',
                     headers: {
@@ -162,19 +166,18 @@
                 })
                     .then(response => {
                         if (response.ok) {
-                            // Обробка успішної відповіді
+                            getSelectedProgram();
                             alert('Пакет успішно вибрано!');
                         } else {
-                            // Обробка помилки
-                            alert('Неможливо змінити програму після першого списання.');
+                            throw new Error('Неможливо змінити програму після першого списання.');
                         }
                     })
                     .catch(error => {
                         console.error('Помилка:', error);
-                        alert('Помилка вибору пакета. Спробуйте ще раз.');
+                        alert(error.message || 'Помилка вибору пакета. Спробуйте ще раз.');
                     });
             }
-        });
+            });
     </script>
 @endsection
 

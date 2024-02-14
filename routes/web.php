@@ -51,3 +51,4 @@ Route::post('/reject-video/{id}', [App\Http\Controllers\VideoController::class, 
 
 //Вибір програми
 Route::post('/save-package', [\App\Http\Controllers\ProgramsUserController::class, 'savePackage'])->name('savePackage');
+Route::get('/get-selected-program', [\App\Http\Controllers\ProgramsUserController::class, 'getSelectedProgram'])->name('getSelectedProgram');

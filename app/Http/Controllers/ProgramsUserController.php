@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Program;
 use App\Models\ProgramsUser;
 use App\Models\Video;
 use Illuminate\Http\JsonResponse;
@@ -58,5 +59,27 @@ class ProgramsUserController extends Controller
             ->update(['is_program' => 0]); // Встановлюємо позначку, що до цього відео вибрано програму "0"
 
         return response()->json(['message' => 'Вибрану програму збережено успішно'], 200);
+    }
+
+    // Метод для отримання даних про вибрану програму
+    public function getSelectedProgram(Request $request)
+    {
+        $userId = Auth::id();
+
+        $programUser = ProgramsUser::where('user_id', $userId)
+            ->whereNull('payment_program')
+            ->first();
+
+        if ($programUser) {
+            $program = Program::find($programUser->program_id);
+
+            if ($program) {
+                return response()->json(['program' => $program]);
+            } else {
+                return response()->json(['error' => 'Дані про програму не знайдено'], 404);
+            }
+        } else {
+            return response()->json(['error' => 'Програма не вибрана'], 404);
+        }
     }
 }
