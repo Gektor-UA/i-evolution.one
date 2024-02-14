@@ -24,10 +24,34 @@ class ProgramsUserController extends Controller
 
         $userId = Auth::id();
 
-        ProgramsUser::create([
-            'user_id' => $userId,
-            'program_id' => (int) $validatedData['package_id'],
-        ]);
+        // Перевірка чи вже було списання
+        $firstWithdrawalExists = ProgramsUser::where('user_id', $userId)
+            ->whereNotNull('first_withdrawal')
+            ->whereNull('payment_program')
+            ->exists();
+
+        // Якщо списання було, блокуємо вибір нової програми
+        if ($firstWithdrawalExists) {
+            return response()->json(['message' => 'Неможливо змінити програму після першого списання'], 403);
+        }
+
+        // Перевірка чи вже є запис про вибір програми користувачем
+        $programUser = ProgramsUser::where('user_id', $userId)
+            ->whereNull('payment_program')
+            ->first();
+
+        if ($programUser) {
+            // Якщо запис вже є, оновлюємо його
+            $programUser->update([
+                'program_id' => (int) $validatedData['package_id'],
+            ]);
+        } else {
+            // Якщо запису немає, створюємо новий
+            ProgramsUser::create([
+                'user_id' => $userId,
+                'program_id' => (int) $validatedData['package_id'],
+            ]);
+        }
 
         Video::where('user_id', $userId)
             ->where('is_program', null)
