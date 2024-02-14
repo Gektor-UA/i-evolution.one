@@ -1,17 +1,73 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="main-alerts">
+    <div class="cabinet__inner">
+        <div class="cabinet__item">
+            <h1 class="cabinet__title">{{ __('I-Health') }}</h1>
+            <div class="balance__inner">
+                <h2 class="balance__title">{{ __('Ваш баланс:') }}</h2>
+
+                <div class="balance__income">
+                    <div class="balance__box">
+                        <p class="balance__text">{{ __('Баланс') }}</p>
+                        <div class="balance__item">
+                            <p class="balance__sum">{{ $balance->amount }} $</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if($video)
+                <div class="packages__list">
+                    <div class="packages__item">
+                        <p>{{ __('ПРОГРАМА 70$') }}</p>
+                        <button class="select-package-btn" data-package-id="1">{{ __('Вибрати') }}</button>
+                    </div>
+
+                    <div class="packages__item">
+                        <p>{{ __('ПРОГРАМА 140$') }}</p>
+                        <button class="select-package-btn" data-package-id="2">{{ __('Вибрати') }}</button>
+                    </div>
+
+                    <div class="packages__item">
+                        <p>{{ __('ПРОГРАМА 420$') }}</p>
+                        <button class="select-package-btn" data-package-id="3">{{ __('Вибрати') }}</button>
+                    </div>
+                </div>
+            @endif
+
+            <form class="forms__video" action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                <input class="forms__video__input" type="file" name="video" accept="video/*" required>
+                <button class="forms__video__btn" {{ $blockForm ? 'disabled' : '' }} type="submit">Upload Video</button>
+            </form>
+
+            <div class="youtube__inner">
+                <div class="i__health__link__inner">
+                    <a href="" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
+                </div>
+                <form class="forms__youtube" action="{{ route('submitYouTubeLink') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                    {{-- <label for="youtubeLink">YouTube Link:</label> --}}
+                    <input class="forms__youtube__input" type="text" name="youtubeLink" id="youtubeLink" required>
+                    <button class="forms__youtube__btn" type="submit">{{ __('Submit') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- <div class="main-alerts">
         <div class="container">
             <div class="i-health__inner">
                 <h2 class="section-heading">I-Health</h2>
                 <a href="" class="btn-primary color-white" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
             </div>
 
-
-            <div class="forms-video" style="position: relative">
+            <div class="forms-video" style="position: relative"> --}}
                 <!-- Форма для завантаження відео -->
-                <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
+                {{-- <form action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <button onclick="document.getElementById('fileInput').click()" {{ $blockForm ? 'disabled' : '' }}>Загрузить видео</button>
@@ -21,7 +77,7 @@
                 </form>
 
                 <!-- Форма для введення посилання на YouTube -->
-                <form action="{{ route('submitYouTubeLink') }}" method="post">
+                {{-- <form action="{{ route('submitYouTubeLink') }}" method="post">
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <label for="youtubeLink">Ссылка на YouTube:</label>
@@ -68,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif --}}
 
             <div id="programInfo"></div>
 
@@ -86,8 +142,8 @@
             {{--                </button>--}}
             {{--            </div>--}}
 
-        </div>
-    </div>
+        {{-- </div>
+    </div> --}}
 
 
 

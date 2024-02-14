@@ -60,9 +60,10 @@
         @yield('content')
     </main>
 
-    <footer class="footer">
-{{--        FOOTER--}}
-    </footer>
+    {{-- <footer class="footer">
+        FOOTER
+    </footer> --}}
+
 
 </div>
 
