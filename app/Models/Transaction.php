@@ -19,6 +19,13 @@ class Transaction extends Model
     const REFERRAL_INTEREST_SECOND_LINE = 8;
     const REFERRAL_INTEREST_THIRD_LINE = 9;
 
+    const FIRST_BONUS_AMBASSADOR_FIRST_LINE = 10;
+    const FIRST_BONUS_AMBASSADOR_SECOND_LINE = 11;
+    const FIRST_BONUS_AMBASSADOR_THIRD_LINE = 12;
+    const FIRST_BONUS_AMBASSADOR_FOURTH_LINE = 13;
+    const FIRST_BONUS_AMBASSADOR_FIFTH_LINE = 14;
+    const FIRST_BONUS_AMBASSADOR_SIXTH_LINE = 15;
+
     protected $table = 'transactions';
     protected $fillable = [
         'user_id',
