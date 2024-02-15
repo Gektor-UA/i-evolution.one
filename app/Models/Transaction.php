@@ -15,6 +15,9 @@ class Transaction extends Model
     const WITHDRAWAL_PACKAGE = 4;
     const PAYMENT_BY_PACKAGE = 5;
     const WITHDRAWAL_PACKAGE_PENALTY = 6;
+    const REFERRAL_INTEREST_FIRST_LINE = 7;
+    const REFERRAL_INTEREST_SECOND_LINE = 8;
+    const REFERRAL_INTEREST_THIRD_LINE = 9;
 
     protected $table = 'transactions';
     protected $fillable = [
