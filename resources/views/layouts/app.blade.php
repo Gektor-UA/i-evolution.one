@@ -34,6 +34,8 @@
                 <ul class="auth">
                     @auth
                         <li class="d-flex gap-3 text-white">
+                            <a href="" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
+
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit">Выйти</button>
