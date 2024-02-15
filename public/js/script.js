@@ -8,17 +8,41 @@
 //     return false;
 // });
 
-document.getElementById('iHealthRefLink').addEventListener('click', function() {
-    var refLink = this.getAttribute('data-ref-link');
+var iHealthRefLinkElement = document.getElementById('iHealthRefLink');
 
-    var input = document.createElement('textarea');
-    input.value = refLink;
-    document.body.appendChild(input);
+if (iHealthRefLinkElement) {
+    iHealthRefLinkElement.addEventListener('click', function() {
+        var refLink = this.getAttribute('data-ref-link');
 
-    input.select();
-    var result = document.execCommand('copy');
+        var input = document.createElement('textarea');
+        input.value = refLink;
+        document.body.appendChild(input);
 
-    document.body.removeChild(input);
+        input.select();
+        var result = document.execCommand('copy');
 
-    return false;
+        document.body.removeChild(input);
+
+        return false;
+    });
+}
+
+let burgerOpenBtn = document.querySelector('#burger');
+let burgerMenu = document.querySelector('#burger__menu');
+let burgerCloseBtn = document.querySelector('#burger__menu__close');
+
+burgerOpenBtn.addEventListener('click', function() {
+    burgerMenu.classList.add('burger-active');
+});
+
+burgerCloseBtn.addEventListener('click', function() {
+    burgerMenu.classList.remove('burger-active');
+});
+
+document.addEventListener('click', function(event) {
+    let isClickInside = burgerMenu.contains(event.target) || burgerOpenBtn.contains(event.target);
+
+    if (!isClickInside) {
+        burgerMenu.classList.remove('burger-active');
+    }
 });
