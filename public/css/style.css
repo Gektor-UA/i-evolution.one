@@ -704,3 +704,155 @@ main {
     text-align: right;
     transition: all .3s ease-in-out;
 }
+
+/* burger */
+
+#burger {
+    background: transparent;
+    border: none;
+    outline: none;
+    display: none;
+}
+
+.burger__menu {
+    position: fixed;
+    top: 0;
+    right: -303px;
+    height: 100svh;
+    background-color: #27002A;
+    z-index: 1;
+    color: #FFFFFF;
+    width: 90%;
+    max-width: 300px;
+    transition: all 0.3s ease-in-out;
+    border-left: 1px solid #F0BF48;
+    box-shadow: 0px 0px 4px 0px #F0BF48;
+}
+
+.burger__menu__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 88px 60px 77px;
+
+}
+
+.nav-mobile {
+    display: none;
+}
+
+.burger-active {
+    right: 0;
+}
+
+.burger__menu__close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 50px;
+    font-weight: 200;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    color: #F0BF48;
+}
+
+.li-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+}
+
+.nav-mobile .auth {
+    height: 100%;
+    width: 100%;
+}
+
+.li-mobile a {
+    text-align: center;
+}
+
+.li-mobile button {
+    width: 100%;
+}
+
+/* adaptive */
+
+@media screen and (max-width: 1040px) {
+    /* header */
+
+    .header__inner {
+        gap: 20px;
+        margin: 30px 15px;
+    }
+
+    /* home */
+
+    .home__img {
+        padding: 0 15px;
+    }
+
+    /* auth */
+    .auth__container {
+        padding: 0 15px;
+    }
+
+    /* burger */
+
+    #burger {
+        display: block;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    .nav-mobile {
+        display: flex;
+    }
+
+    .cabinet__item {
+        padding: 0 15px;
+    }
+}
+
+@media screen and (max-width: 920px) {
+
+    /* cabinet */
+    .balance__video__inner {
+        flex-direction: column;
+    }
+
+    .balance__inner {
+        width: 100%;
+    }
+
+    .packages__list2 {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .packages__item2  {
+        max-width: 300px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+
+    /* cabinet */
+    .forms__video__inner {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .forms__youtube {
+        flex-direction: column;
+    }
+
+    .forms__youtube__input {
+        width: 100%;
+    }
+}
