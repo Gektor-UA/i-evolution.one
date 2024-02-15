@@ -39,18 +39,18 @@ class PartnerProgramForOtherUsers extends Command
 
         foreach ($nonAmbassadorUsers as $user) {
 //            \Log::info('==================================');
-//            \Log::info('$user', $user->toArray());
-//            \Log::info('---------------------------');
+            \Log::info('$user', $user->toArray());
+            \Log::info('---------------------------');
             // Отримати його рефералів перших трьох ліній (масив айдішніків)
             $referrals = $this->getReferralsRecursive($user->id);
-//            \Log::info('Список айдішок рефералів: ', $referrals);
-//            \Log::info('$referrals', array_values($referrals));
+            \Log::info('Список айдішок рефералів: ', $referrals);
+            \Log::info('$referrals', array_values($referrals));
 //            foreach ($referrals as $userId => $level) {
 //                \Log::info("User ID: $userId, Level: $level");
 //            }
-//            \Log::info('==================================');
-//            \Log::info('==================================');
-//            \Log::info('==================================');
+            \Log::info('==================================');
+            \Log::info('==================================');
+            \Log::info('==================================');
 
             foreach ($referrals as $referral) {
 //                \Log::info("ЯКИЙ ПРИЛІТАЄ ЮЗЕР: ", ['user_id' => $referral]);
@@ -95,7 +95,7 @@ class PartnerProgramForOtherUsers extends Command
                         ]);
                     } else {
                         // Запис вже існує, можна пропустити обчислення відсотків
-//                        \Log::info("Запис про нарахування вже існує для користувача $user->id, реферала $referral[user_id] та програми $programReferral->id");
+                        \Log::info("Запис про нарахування вже існує для користувача $user->id, реферала $referral[user_id] та програми $programReferral->id");
                     }
                 }
             }
@@ -105,39 +105,43 @@ class PartnerProgramForOtherUsers extends Command
 
     private function getReferralsRecursive($userId, &$referrals = [], $level = 1)
     {
-        // Виводити тільки 3 лінії рефералів
-        if ($level > 3) {
-            return [];
-        }
+        // Перевірка чи є користувач амбасадором
+        $isUserAmbassador = User::where('id', $userId)
+            ->where('is_ambassador', 1)
+            ->first();
 
-        // Отримати прямих рефералів поточного користувача
-        $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
-//        $directReferrals = ReferralsUser::where('referral_id', $userId)->get(['user_id']);
-//        \Log::info("Тут айдішка реферала:" . $directReferrals);
+        if (!$isUserAmbassador) {
+            // Виводити тільки 3 лінії рефералів
+            if ($level > 3) {
+                return [];
+            }
 
+            // Отримати прямих рефералів поточного користувача
+            $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+            \Log::info('Масив прямих рефералів', $directReferrals);
 
-//        foreach ($directReferrals as $referral) {
-//            $referrals[$referral->user_id] = $level; // Зберігаємо рівень реферала
-//            \Log::info("ID реферала:" . $referrals[$referral->user_id]);
-//        }
-
-        // Додати всіх прямих рефералів до загального списку рефералів
-//        $referrals = array_merge($referrals, $directReferrals);
-
-        // Рекурсивно отримати рефералів для кожного прямого реферала
-        foreach ($directReferrals as $referralId) {
             // Рекурсивно отримати рефералів для кожного прямого реферала
-            $this->getReferralsRecursive($referralId, $referrals, $level + 1);
-            // Додати прямого реферала з відповідним рівнем
-            $referrals[] = ['user_id' => $referralId, 'level' => $level];
+            foreach ($directReferrals as $referralId) {
+
+                // Додати прямого реферала з відповідним рівнем
+                $referrals[] = ['user_id' => $referralId, 'level' => $level];
+
+                // Рекурсивно отримати рефералів для кожного прямого реферала, які не є амбасадорами
+                $this->getReferralsRecursive($referralId, $referrals, $level + 1);
+            }
+
+            // Впорядкувати масив за рівнем
+            usort($referrals, function ($a, $b) {
+                return $a['level'] <=> $b['level'];
+            });
+
+            return $referrals;
         }
 
-        // Впорядкувати масив за рівнем
-        usort($referrals, function ($a, $b) {
-            return $a['level'] <=> $b['level'];
-        });
 
-        return $referrals;
+
+
+
     }
 
     private function checkIfProgramPurchased($userId)
