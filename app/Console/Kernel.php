@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('video:check-confirmation-time')->everyMinute();
         $schedule->command('video:payment-by-package')->everyMinute();
-//        $schedule->command('app:partner-program-for-other-users')->everyMinute();
+        $schedule->command('app:partner-program-for-other-users')->everyMinute();
 
     }
 

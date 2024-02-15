@@ -18,29 +18,41 @@
             </div>
 
             @if($video)
+                <div class="alert alert-success" role="alert">
+                    Ваше видео одобрено
+                </div>
                 <div class="packages__list">
                     <div class="packages__item">
-                        <p>{{ __('ПРОГРАМА 70$') }}</p>
-                        <button class="select-package-btn" data-package-id="1">{{ __('Вибрати') }}</button>
+                        <p>{{ __('ПРОГРАММА 70$') }}</p>
+                        <button class="select-package-btn" data-package-id="1">{{ __('Выбрать') }}</button>
                     </div>
 
                     <div class="packages__item">
-                        <p>{{ __('ПРОГРАМА 140$') }}</p>
-                        <button class="select-package-btn" data-package-id="2">{{ __('Вибрати') }}</button>
+                        <p>{{ __('ПРОГРАММА 140$') }}</p>
+                        <button class="select-package-btn" data-package-id="2">{{ __('Выбрать') }}</button>
                     </div>
 
                     <div class="packages__item">
-                        <p>{{ __('ПРОГРАМА 420$') }}</p>
-                        <button class="select-package-btn" data-package-id="3">{{ __('Вибрати') }}</button>
+                        <p>{{ __('ПРОГРАММА 420$') }}</p>
+                        <button class="select-package-btn" data-package-id="3">{{ __('Выбрать') }}</button>
                     </div>
+                </div>
+            @endif
+            <div id="programInfo" style="color: #FFFFFF; text-align: center;"></div>
+
+            @if($selectVideo)
+                <div class="alert alert-primary" role="alert">
+                    Ваше видео отправлено на проверку.
                 </div>
             @endif
 
             <form class="forms__video" action="{{ route('uploadVideo') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                <input class="forms__video__input" type="file" name="video" accept="video/*" required>
-                <button class="forms__video__btn" {{ $blockForm ? 'disabled' : '' }} type="submit">Upload Video</button>
+                <button class="forms__video__btn" onclick="document.getElementById('fileInput').click()" {{ $blockForm ? 'disabled' : '' }}>Загрузить видео</button>
+                <span class="video__name" id="fileName"></span>
+                <input type="file" id="fileInput" name="video" accept="video/*" style="position: absolute; left: -9999px; opacity: 0;" onchange="displayFileName(this)" required>
+                <button class="forms__video__btn" type="submit" {{ $blockForm ? 'disabled' : '' }}>Отправить</button>
             </form>
 
             <div class="youtube__inner">
@@ -51,8 +63,8 @@
                     @csrf
                     <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     {{-- <label for="youtubeLink">YouTube Link:</label> --}}
-                    <input class="forms__youtube__input" type="text" name="youtubeLink" id="youtubeLink" required>
-                    <button class="forms__youtube__btn" type="submit">{{ __('Submit') }}</button>
+                    <input class="forms__youtube__input" type="text" name="youtubeLink" id="youtubeLink" {{ $blockForm ? 'disabled' : '' }} required>
+                    <button class="forms__youtube__btn" type="submit" {{ $blockForm ? 'disabled' : '' }}>{{ __('Отправить') }}</button>
                 </form>
             </div>
         </div>
@@ -126,7 +138,7 @@
                 </div>
             @endif --}}
 
-            <div id="programInfo"></div>
+
 
 {{--            @foreach ($referrals as $referral)--}}
 {{--                <p>{{ $referral }}</p>--}}
