@@ -38,6 +38,12 @@ class Transaction extends Model
     // Константа для розміщення бонусу кількості рефералів
     const BONUS_NUMBER_REFERRALS = 22;
 
+    // Константа для нарахування бонусу по програмі "Швидкий старт"
+    const QUICK_START = 23;
+
+    // Константа для нарахування бонусу по програмі "Кількість амбасадорів"
+    const AMBASSADORS = 24;
+
     protected $table = 'transactions';
     protected $fillable = [
         'user_id',

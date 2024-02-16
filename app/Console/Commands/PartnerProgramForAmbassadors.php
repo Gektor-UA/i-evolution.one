@@ -9,6 +9,7 @@ use App\Models\ReferralsUser;
 use App\Models\SingleAccruals;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class PartnerProgramForAmbassadors extends Command
@@ -57,7 +58,6 @@ class PartnerProgramForAmbassadors extends Command
 
 
             foreach ($referrals as $referral) {
-
 //                \Log::info('Ambassador ID: ' . $ambassador->id);
 //                \Log::info('Referral ID: ' . $referral['user_id']);
                 $userSingleAccruals = SingleAccruals::where('user_id', $ambassador->id)
@@ -74,17 +74,31 @@ class PartnerProgramForAmbassadors extends Command
                     $this->bonusClosingProgram($ambassador, $referral);
                 }
             }
+
             // Перевірка на кількість рефералів не включаючи структуру амбасадорів
             $this->bonusNumberReferrals($ambassador->id);
+
+            // Перевірка на нарахування бонусу "Швидкий старт"
+            $quickStartTransaction = Transaction::where('user_id', $ambassador->id)
+                ->where('type_transaction', Transaction::QUICK_START)
+                ->exists();
+            if (!$quickStartTransaction) {
+                $this->quickStart($ambassador->id);
+            }
+
+            $this->bonusNumberAmbassadors($ambassador->id);
         }
 //        $userId = 3;
 //        $referrals = $this->getAllReferralsRecursive($userId);
-//        $referrals = count($referrals);
+////        $referrals = count($referrals);
+//        \Log::info('Кількість рефералів: ', $referrals);
+//        \Log::info('===================================');
+//        \Log::info('===================================');
+//        \Log::info('===================================');
+
+//        $userId = 3;
+//        $referrals = $this->bonusNumberAmbassadors($userId);
 //        \Log::info('Кількість рефералів: ' . $referrals);
-//        \Log::info('===================================');
-//        \Log::info('===================================');
-//        \Log::info('===================================');
-//        \Log::info('===================================');
     }
 
     /**
@@ -349,6 +363,148 @@ class PartnerProgramForAmbassadors extends Command
                         Purse::create([
                             'user_id' => $userId,
                             'type_transaction' => Transaction::BONUS_NUMBER_REFERRALS,
+                            'amount' => $bonus,
+                            'wallet_type' => 1,
+                        ]);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Метод нараховує відповідні бонуси по програмі "Швидкий старт"
+     * @param $userId
+     */
+    private function quickStart($userId) {
+
+        $referralCount = $this->getAllReferralsRecursive($userId);
+//        \Log::info($referralCount);
+
+        $bonusAmounts = [
+            1000 => 1000,
+            750 => 950,
+            500 => 400,
+            250 => 150,
+            150 => 100,
+            100 => 60,
+            90 => 50,
+            70 => 30,
+            40 => 25,
+            20 => 12,
+            10 => 5,
+        ];
+
+        // Сьогоднішня дата
+        $currentDate = Carbon::now();
+        // Дата реєстрації поточного користувача
+        $userRegistrationDate = User::find($userId)->created_at;
+//        \Log::info('====================================');
+//        \Log::info('Дата реєстрації користувача: ' . $userId . ' - ' . $userRegistrationDate);
+        // Дата 90 днів після
+        $ninetyDaysLater = $userRegistrationDate->copy()->addDays(90);
+//        \Log::info('Дата 90 днів після: ' . $ninetyDaysLater);
+//        \Log::info('====================================');
+
+        $referralsAddedWithin90Days = 0;
+
+        foreach ($referralCount as $referralId) {
+            $referral = User::find($referralId);
+//            \Log::info('Реферал: ' . $referral);
+            if ($referral->created_at <= $ninetyDaysLater && $referral->created_at >= $userRegistrationDate) {
+//                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом і потрапляє до списку');
+                $referralsAddedWithin90Days++;
+            } else {
+                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом але не потрапляє до списку');
+            }
+        }
+
+//        \Log::info('====================================');
+//        \Log::info('Кількість рефералів до 90 днів: ' . $referralsAddedWithin90Days);
+//        \Log::info('====================================');
+
+
+        // Перевіряємо, чи пройшло 90 днів з моменту реєстрації
+        $daysSinceRegistration = $currentDate->diffInDays($userRegistrationDate);
+//        \Log::info('Пройшло днів: ' . $daysSinceRegistration);
+        foreach ($bonusAmounts as $referrals => $bonus) {
+            if ($referralsAddedWithin90Days >= $referrals && $daysSinceRegistration >= 90) {
+                Transaction::create([
+                    'user_id' => $userId,
+                    'type_transaction' => Transaction::QUICK_START,
+                    'amount' => $bonus,
+                    'wallet_type' => 1,
+                ]);
+
+                $userPurse = Purse::where('user_id', $userId)
+                    ->where('wallet_type', 1)
+                    ->first();
+                if ($userPurse) {
+                    $userPurse->amount += $bonus;
+                    $userPurse->save();
+                } else {
+                    Purse::create([
+                        'user_id' => $userId,
+                        'type_transaction' => Transaction::QUICK_START,
+                        'amount' => $bonus,
+                        'wallet_type' => 1,
+                    ]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Метод для розрахунку бонусів по програмі "Бонус за кількість амбасадорів"
+     * @param $userId
+     */
+    private function bonusNumberAmbassadors($userId) {
+        $referralCount = $this->getAllReferralsRecursive($userId);
+        $numberAmbassador = 0;
+
+        $bonusAmounts = [
+            50 => 150,
+            40 => 225,
+            25 => 150,
+            15 => 105,
+            8 => 75,
+            3 => 45,
+        ];
+
+        foreach ($referralCount as $referralId) {
+            $referral = User::find($referralId);
+            if ($referral->is_ambassador == 1) {
+                $numberAmbassador++;
+            }
+        }
+
+        foreach ($bonusAmounts as $ambassadors => $bonus) {
+            if ($numberAmbassador >= $ambassadors) {
+
+                // Перевірка, чи вже було здійснене нарахування
+                $existingTransaction = Transaction::where('user_id', $userId)
+                    ->where('type_transaction', Transaction::AMBASSADORS)
+                    ->where('amount', $bonus)
+                    ->exists();
+
+                if (!$existingTransaction) {
+                    Transaction::create([
+                        'user_id' => $userId,
+                        'type_transaction' => Transaction::AMBASSADORS,
+                        'amount' => $bonus,
+                        'wallet_type' => 1,
+                    ]);
+
+                    $userPurse = Purse::where('user_id', $userId)
+                        ->where('wallet_type', 1)
+                        ->first();
+                    if ($userPurse) {
+                        $userPurse->amount += $bonus;
+                        $userPurse->save();
+                    } else {
+                        Purse::create([
+                            'user_id' => $userId,
+                            'type_transaction' => Transaction::AMBASSADORS,
                             'amount' => $bonus,
                             'wallet_type' => 1,
                         ]);
