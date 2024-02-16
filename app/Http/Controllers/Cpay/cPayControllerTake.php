@@ -46,20 +46,20 @@ class cPayControllerTake extends Controller
 //            ]);
 //            $user->balance_usd =  $user->balance_usd + $amount;
 //            $user->save();
-                $Purse = Purse::where('user_id', '=', $user['id'])->where('wallet_type',Purse::NEW_PURSE)->first();
+                $Purse = Purse::where('user_id', '=', $user['id'])->where('wallet_type',Purse::I_HEALTH_PURSE)->first();
             Purse::where('user_id', $user['id'])
-                ->where('wallet_type',Purse::NEW_PURSE)
+                ->where('wallet_type',Purse::I_HEALTH_PURSE)
                 ->update([
                 'amount' => $Purse['amount'] + floatval($amount),
             ]);
-            Refill::create([
-                'user_id' => $user['id'],
-                'amount'  => floatval($amount),
-                'status'  => Refill::STATUS_CONFIRM,
-                'payment_method' => Refill::PAYMENT_USDT_TRC,
-                'hash'    => "",
-                'transactionId' => "",
-            ]);
+//            Refill::create([
+//                'user_id' => $user['id'],
+//                'amount'  => floatval($amount),
+//                'status'  => Refill::STATUS_CONFIRM,
+//                'payment_method' => Refill::PAYMENT_USDT_TRC,
+//                'hash'    => "",
+//                'transactionId' => "",
+//            ]);
                 Log::info("Payment is success!");
             try {
                 Mail::to($user['email'])->send(
