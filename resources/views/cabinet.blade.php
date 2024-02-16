@@ -8,6 +8,13 @@
                 <div class="balance__inner">
                     <h2 class="balance__title">{{ __('Ваш баланс:') }}</h2>
 
+                    <form id="depositForm" action="{{ route('balance.depositAddress') }}" method="POST">
+                        @csrf
+                        <label for="amountMoney">Сумма</label>
+                        <input type="number" class="form-control" id="amountMoney" name="amount" placeholder="Enter 1-1468950">
+                        <button type="submit" class="btn btn-primary">{{ __('Пополнить') }}</button>
+                    </form>
+
                     <div class="balance__income">
                         <div class="balance__box">
                             <p class="balance__text">{{ __('Баланс') }}</p>
