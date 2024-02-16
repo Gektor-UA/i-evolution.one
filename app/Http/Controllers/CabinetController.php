@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProgramsUser;
 use App\Models\Purse;
 use App\Models\ReferralsUser;
 use App\Models\User;
@@ -38,6 +39,11 @@ class CabinetController extends Controller
             ->where('wallet_type', 1)
             ->first();
 
+        // Яка програма відкрита
+        $program = ProgramsUser::where('user_id', $user_id)
+            ->whereNull('payment_program')
+            ->first();
+
 //        // Виклик методу для отримання всіх рефералів користувача та їхніх рефералів
 //        $referals = $this->getReferralsRecursive($user_id);
 
@@ -46,6 +52,7 @@ class CabinetController extends Controller
             'balance' => $balance,
             'blockForm' => $blockForm,
             'selectVideo' => $selectVideo,
+            'program' => $program->program_id ?? null,
 //            'referrals' => $referals,
         ]);
     }
