@@ -35,6 +35,9 @@ class Transaction extends Model
     const SECOND_BONUS_AMBASSADOR_FIFTH_LINE = 20;
     const SECOND_BONUS_AMBASSADOR_SIXTH_LINE = 21;
 
+    // Константа для розміщення бонусу кількості рефералів
+    const BONUS_NUMBER_REFERRALS = 22;
+
     protected $table = 'transactions';
     protected $fillable = [
         'user_id',

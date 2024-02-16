@@ -74,7 +74,17 @@ class PartnerProgramForAmbassadors extends Command
                     $this->bonusClosingProgram($ambassador, $referral);
                 }
             }
+            // Перевірка на кількість рефералів не включаючи структуру амбасадорів
+            $this->bonusNumberReferrals($ambassador->id);
         }
+//        $userId = 3;
+//        $referrals = $this->getAllReferralsRecursive($userId);
+//        $referrals = count($referrals);
+//        \Log::info('Кількість рефералів: ' . $referrals);
+//        \Log::info('===================================');
+//        \Log::info('===================================');
+//        \Log::info('===================================');
+//        \Log::info('===================================');
     }
 
     /**
@@ -124,7 +134,7 @@ class PartnerProgramForAmbassadors extends Command
     }
 
     /**
-     * Метод для одиничного нарахування бонусу за закриту програму для юзера від його реферала
+     * Метод для одиничного нарахування бонусу за зроблені 3 платежі при купівлінайпершої програми для юзера від його реферала
      * з перших 6 ліній
      * @param $user
      * @param $referral
@@ -192,6 +202,12 @@ class PartnerProgramForAmbassadors extends Command
         }
     }
 
+    /**
+     * Метод для нарахування бонусу за закриту програму для юзера від його реферала
+     * з перших 6 ліній
+     * @param $user
+     * @param $referral
+     */
     private function bonusClosingProgram($user, $referral) {
         $programReferral = ProgramsUser::where('user_id', $referral['user_id'])
             ->where('first_withdrawal', 1)
@@ -250,6 +266,95 @@ class PartnerProgramForAmbassadors extends Command
                 ->first();
             $userPurse->amount += $commissionAmount;
             $userPurse->save();
+        }
+    }
+
+    /**
+     * Метод повертає масив всіх рефералів для юзера не вважаючи кількість ліній
+     * @param $userId
+     * @param $referrals
+     * @return array
+     */
+    private function getAllReferralsRecursive($userId, &$referrals = []) {
+        // Отримати прямих рефералів поточного користувача
+        $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+
+        // Додати прямих рефералів до загального списку рефералів
+        $referrals = array_merge($referrals, $directReferrals);
+
+        // Рекурсивно отримати всіх рефералів для кожного прямого реферала
+        foreach ($directReferrals as $referralId) {
+            // Перевірка чи є користувач амбасадором
+            $isUserAmbassador = User::where('id', $referralId)
+                ->where('is_ambassador', 1)
+                ->exists();
+
+            if (!$isUserAmbassador) {
+                // Рекурсивно отримати всіх рефералів для кожного прямого реферала, які не є амбасадорами
+                $this->getAllReferralsRecursive($referralId, $referrals);
+            }
+        }
+
+        return $referrals;
+    }
+
+    /**
+     * Метод нараховує відповідні бонуси перевіряючи яка кількість рефералів поточного користувача
+     * @param $userId
+     */
+    private function bonusNumberReferrals($userId) {
+        $referralCount = $this->getAllReferralsRecursive($userId);
+
+        $bonusAmounts = [
+            1000 => 100,
+            900 => 100,
+            800 => 100,
+            700 => 100,
+            600 => 100,
+            500 => 100,
+            400 => 150,
+            250 => 100,
+            150 => 50,
+            100 => 50,
+            50 => 20,
+            30 => 20,
+            10 => 10,
+        ];
+
+        foreach ($bonusAmounts as $referrals => $bonus) {
+            if (count($referralCount) >= $referrals) {
+
+                // Перевірка, чи вже було здійснене нарахування
+                $existingTransaction = Transaction::where('user_id', $userId)
+                    ->where('type_transaction', Transaction::BONUS_NUMBER_REFERRALS)
+                    ->where('amount', $bonus)
+                    ->exists();
+
+                if (!$existingTransaction) {
+                    Transaction::create([
+                        'user_id' => $userId,
+                        'type_transaction' => Transaction::BONUS_NUMBER_REFERRALS,
+                        'amount' => $bonus,
+                        'wallet_type' => 1,
+                    ]);
+
+                    $userPurse = Purse::where('user_id', $userId)
+                        ->where('wallet_type', 1)
+                        ->first();
+
+                    if ($userPurse) {
+                        $userPurse->amount += $bonus;
+                        $userPurse->save();
+                    } else {
+                        Purse::create([
+                            'user_id' => $userId,
+                            'type_transaction' => Transaction::BONUS_NUMBER_REFERRALS,
+                            'amount' => $bonus,
+                            'wallet_type' => 1,
+                        ]);
+                    }
+                }
+            }
         }
     }
 }
