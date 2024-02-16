@@ -10,6 +10,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+//        $users = User::where('is_ambassador', 1)->get();
+//        $users = User::where('is_ambassador', 0)->get();
         return view('index', ['users' => $users]);
     }
 
