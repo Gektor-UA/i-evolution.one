@@ -39,18 +39,18 @@ class PartnerProgramForOtherUsers extends Command
 
         foreach ($nonAmbassadorUsers as $user) {
 //            \Log::info('==================================');
-            \Log::info('$user', $user->toArray());
-            \Log::info('---------------------------');
+//            \Log::info('$user', $user->toArray());
+//            \Log::info('---------------------------');
             // Отримати його рефералів перших трьох ліній (масив айдішніків)
             $referrals = $this->getReferralsRecursive($user->id);
-            \Log::info('Список айдішок рефералів: ', $referrals);
-            \Log::info('$referrals', array_values($referrals));
+//            \Log::info('Список айдішок рефералів: ', $referrals);
+//            \Log::info('$referrals', array_values($referrals));
 //            foreach ($referrals as $userId => $level) {
 //                \Log::info("User ID: $userId, Level: $level");
 //            }
-            \Log::info('==================================');
-            \Log::info('==================================');
-            \Log::info('==================================');
+//            \Log::info('==================================');
+//            \Log::info('==================================');
+//            \Log::info('==================================');
 
             foreach ($referrals as $referral) {
 //                \Log::info("ЯКИЙ ПРИЛІТАЄ ЮЗЕР: ", ['user_id' => $referral]);
@@ -95,7 +95,7 @@ class PartnerProgramForOtherUsers extends Command
                         ]);
                     } else {
                         // Запис вже існує, можна пропустити обчислення відсотків
-                        \Log::info("Запис про нарахування вже існує для користувача $user->id, реферала $referral[user_id] та програми $programReferral->id");
+//                        \Log::info("Запис про нарахування вже існує для користувача $user->id, реферала $referral[user_id] та програми $programReferral->id");
                     }
                 }
             }
@@ -118,7 +118,7 @@ class PartnerProgramForOtherUsers extends Command
 
             // Отримати прямих рефералів поточного користувача
             $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
-            \Log::info('Масив прямих рефералів', $directReferrals);
+//            \Log::info('Масив прямих рефералів', $directReferrals);
 
             // Рекурсивно отримати рефералів для кожного прямого реферала
             foreach ($directReferrals as $referralId) {
@@ -137,11 +137,6 @@ class PartnerProgramForOtherUsers extends Command
 
             return $referrals;
         }
-
-
-
-
-
     }
 
     private function checkIfProgramPurchased($userId)
@@ -209,7 +204,9 @@ class PartnerProgramForOtherUsers extends Command
                 'purses_type' => 1,
             ]);
 
-            $userPurse = Purse::where('user_id', $user->id)->first();
+            $userPurse = Purse::where('user_id', $user->id)
+                ->where('purses_type', 1)
+                ->first();
             $userPurse->amount += $commissionAmount;
             $userPurse->save();
         }
