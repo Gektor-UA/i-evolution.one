@@ -10,15 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class BalanceController extends Controller
 {
-//    /**
-//     * Create a new controller instance.
-//     *
-//     * @return void
-//     */
-//    public function __construct(protected WhitebitService $whitebitService)
-//    {
-//        $this->middleware('auth');
-//    }
 
 
 
@@ -62,7 +53,7 @@ class BalanceController extends Controller
         try {
             $response = Http::withHeaders($headers)->get($urlWithParams);
             Log::info($response->json());
-            return response()->json($response->json(), $response->status());
+//            return response()->json($response->json(), $response->status());
         } catch (\Exception $e) {
             // Handle errors if any
             return response()->json(['error' => $e->getMessage()], 500);
