@@ -15,6 +15,8 @@
                         <button type="submit" class="btn btn-primary">{{ __('Пополнить') }}</button>
                     </form>
 
+                    <p id="depositAddressPlaceholder"></p>
+
                     <div class="balance__income">
                         <div class="balance__box">
                             <p class="balance__text">{{ __('Баланс') }}</p>
@@ -192,6 +194,31 @@
                         alert(error.message || 'Помилка вибору пакета. Спробуйте ще раз.');
                     });
             }
+        });
+
+        // Функція, яка виконується при кліку на кнопку "Пополнить"
+        document.getElementById('depositForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let form = this;
+
+            fetch(form.action, {
+                method: form.method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    amount: form.amount.value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let addressPlaceholder = document.getElementById('depositAddressPlaceholder');
+                    addressPlaceholder.textContent = 'Адреса: ' + data.result.address; // Вставка адреси
+                })
+                .catch(error => {
+                    console.error('Помилка:', error);
+                });
         });
     </script>
 @endsection
