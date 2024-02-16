@@ -34,6 +34,8 @@
                 <ul class="auth">
                     @auth
                         <li class="d-flex gap-3 text-white">
+                            <a href="" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
+
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit">Выйти</button>
@@ -53,6 +55,44 @@
                     @endauth
                 </ul>
             </nav>
+            <button id="burger">
+                <img src="{{ asset('img/burger.png') }}" alt="burger">
+            </button>
+        </div>
+        <div class="burger__menu" id="burger__menu">
+            <div class="burger__menu__inner">
+                <div class="burger__menu__close" id="burger__menu__close">&#215;</div>
+                <nav class="nav nav-mobile">
+{{--                <ul class="menu">--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                    <li><a href="#">Header</a></li>--}}
+{{--                </ul>--}}
+                    <ul class="auth">
+                        @auth
+                            <li class="li-mobile">
+                                <a href="" id="iHealthRefLink" data-ref-link="{{ config('app.url', '') }}/i-health/{{ Auth::user()->referrer_hash }}">I-Health</a>
+
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit">Выйти</button>
+                                </form>
+                                <form action="{{ route('cabinet') }}" method="GET">
+                                    @csrf
+                                    <button type="submit">Кабинет</button>
+                                </form>
+                            </li>
+                        @else
+                            <li class="li-mobile">
+                                <a class="{{ request()->is('register') ? 'active' : '' }}" href="{{ route('register') }}">{{ __('Регистрация') }}</a>
+                                <a class="{{ request()->is('login') ? 'active' : '' }}" href="{{ route('login') }}">{{ __('Авторизация') }}</a>
+                            </li>
+                            
+                        @endauth
+                    </ul>
+                </nav>
+            </div>
         </div>
     </header>
 
