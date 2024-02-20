@@ -201,11 +201,11 @@ class PartnerProgramForOtherUsers extends Command
                 'user_id' => $user->id,
                 'type_transaction' => $typeTransaction,
                 'amount' => $commissionAmount,
-                'purses_type' => 1,
+                'wallet_type' => 1,
             ]);
 
             $userPurse = Purse::where('user_id', $user->id)
-                ->where('purses_type', 1)
+                ->where('wallet_type', 1)
                 ->first();
             $userPurse->amount += $commissionAmount;
             $userPurse->save();

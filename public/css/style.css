@@ -543,6 +543,12 @@ main {
     transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
+.form-control.forms__youtube__input {
+    margin-bottom: 20px;
+}
+.form-control.forms__youtube__input::placeholder {
+    color: #FFFFFF;
+}
 
 .forms__youtube__input:hover,
 .forms__youtube__input:focus {

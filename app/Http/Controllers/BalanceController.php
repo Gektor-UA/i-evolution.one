@@ -2,24 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purse;
+use App\Models\Transaction;
+use App\Models\Withdraw;
 use App\Services\WhitebitService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BalanceController extends Controller
 {
-
-
-
-
-
-
-
-
-
-
     /**
      * create or get deposit address for user
      *
@@ -54,4 +49,39 @@ class BalanceController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * withdrawal money through whitebit service
+     *
+     * @return json
+     */
+    public function withdraw(Request $request)
+    {
+        $user = Auth::user();
+
+        $amount = $request->input('amount');
+        $wallet = $request->input('wallet');
+        $balance = Purse::where('user_id', $user->id)->where('wallet_type', Purse::I_HEALTH_PURSE)->first()->amount;
+        if ($balance < $amount) {
+                return response()->json(['message' => 'Недостаточно средств на балансе']);
+        }
+        Withdraw::create([
+            'user_id' => $user->id,
+            'amount' => $amount,
+            'wallet_type' => Purse::I_HEALTH_PURSE,
+            'status' => Withdraw::STATUS_PENDING,
+            'wallet' => $wallet
+        ]);
+
+        $userPurse = Purse::where('user_id', $user->id)->where('wallet_type', Purse::I_HEALTH_PURSE)->first();
+        $userPurse->amount -= $amount;
+        $userPurse->save();
+
+        // Відправка електронного листа адміністратору для підтвердження
+//        Mail::to('admin@example.com')->send(new WithdrawalNotificationMail($user, $amount, $wallet));
+
+        // Повернення успішної відповіді
+        return response()->json(['message' => 'Запрос на вывод средств успешно отправлен']);
+    }
+
 }
