@@ -48,6 +48,7 @@ Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login
 
 //Admin
 Route::get('/main', [App\Http\Controllers\Admin\AdminController::class, 'index'])->name('main');
+Route::post("/withdraw/{withdrawId}/status", [\App\Http\Controllers\Admin\AdminController::class, 'updateStatus'])->name('updateStatus');
 
 //Upload video
 Route::post('/upload-video', [App\Http\Controllers\VideoController::class, 'uploadVideo'])->name('uploadVideo');

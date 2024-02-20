@@ -15,16 +15,6 @@ use Illuminate\Support\Facades\Mail;
 
 class BalanceController extends Controller
 {
-
-
-
-
-
-
-
-
-
-
     /**
      * create or get deposit address for user
      *
@@ -60,11 +50,6 @@ class BalanceController extends Controller
         }
     }
 
-
-
-
-
-
     /**
      * withdrawal money through whitebit service
      *
@@ -76,14 +61,10 @@ class BalanceController extends Controller
 
         $amount = $request->input('amount');
         $wallet = $request->input('wallet');
-
-        Transaction::create([
-            'user_id' => $user->id,
-            'type_transaction' => Transaction::WITHDRAWAL,
-            'purses_type' => Purse::I_HEALTH_PURSE,
-            'amount' => $amount,
-        ]);
-
+        $balance = Purse::where('user_id', $user->id)->where('wallet_type', Purse::I_HEALTH_PURSE)->first()->amount;
+        if ($balance < $amount) {
+                return response()->json(['message' => 'Недостаточно средств на балансе']);
+        }
         Withdraw::create([
             'user_id' => $user->id,
             'amount' => $amount,
@@ -91,6 +72,10 @@ class BalanceController extends Controller
             'status' => Withdraw::STATUS_PENDING,
             'wallet' => $wallet
         ]);
+
+        $userPurse = Purse::where('user_id', $user->id)->where('wallet_type', Purse::I_HEALTH_PURSE)->first();
+        $userPurse->amount -= $amount;
+        $userPurse->save();
 
         // Відправка електронного листа адміністратору для підтвердження
 //        Mail::to('admin@example.com')->send(new WithdrawalNotificationMail($user, $amount, $wallet));

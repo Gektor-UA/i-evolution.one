@@ -11,9 +11,9 @@
                     <form id="withdrawForm" action="{{ route('balance.withdraw') }}" method="POST">
                         @csrf
                         <label for="amountMoney">Сумма</label>
-                        <input type="number" class="form-control forms__youtube__input" id="amountMoney" name="amount" placeholder="Введите сумму">
+                        <input type="number" class="form-control forms__youtube__input" id="amountMoney" name="amount" placeholder="Введите сумму" required>
                         <label for="amountWallet">Кошелек</label>
-                        <input type="text" class="form-control forms__youtube__input" id="amountWallet" name="wallet" placeholder="Введите адрес кошелька">
+                        <input type="text" class="form-control forms__youtube__input" id="amountWallet" name="wallet" placeholder="Введите адрес кошелька" required>
                         <button type="submit" class="btn forms__video__btn">{{ __('Вывести') }}</button>
                     </form>
 
