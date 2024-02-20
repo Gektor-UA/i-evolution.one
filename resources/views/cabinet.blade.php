@@ -8,11 +8,22 @@
                 <div class="balance__inner">
                     <h2 class="balance__title">{{ __('Ваш баланс:') }}</h2>
 
+                    <form id="withdrawForm" action="{{ route('balance.withdraw') }}" method="POST">
+                        @csrf
+                        <label for="amountMoney">Сумма</label>
+                        <input type="number" class="form-control forms__youtube__input" id="amountMoney" name="amount" placeholder="Введите сумму" required>
+                        <label for="amountWallet">Кошелек</label>
+                        <input type="text" class="form-control forms__youtube__input" id="amountWallet" name="wallet" placeholder="Введите адрес кошелька" required>
+                        <button type="submit" class="btn forms__video__btn">{{ __('Вывести') }}</button>
+                    </form>
+
+                    <p id="withdrawAlert"></p>
+
                     <form id="depositForm" action="{{ route('balance.depositAddress') }}" method="POST">
                         @csrf
                         <label for="amountMoney">Сумма</label>
-                        <input type="number" class="form-control" id="amountMoney" name="amount" placeholder="Enter 1-1468950">
-                        <button type="submit" class="btn btn-primary">{{ __('Пополнить') }}</button>
+                        <input type="number" class="form-control forms__youtube__input" id="amountMoney" name="amount" placeholder="Введите сумму">
+                        <button type="submit" class="btn forms__video__btn">{{ __('Пополнить') }}</button>
                     </form>
 
                     <p id="depositAddressPlaceholder"></p>
@@ -196,6 +207,35 @@
             }
         });
 
+        // Функція, яка виконується при кліку на кнопку "Вивести"
+        document.getElementById('withdrawForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let form = this;
+
+            fetch(form.action, {
+                method: form.method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    amount: form.amount.value,
+                    wallet: form.wallet.value
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    window.location.reload();
+
+                    // form.reset();
+                    // document.getElementById('withdrawAlert').innerHTML = data.message;
+                })
+                .catch(error => {
+                    console.error('Помилка:', error);
+                });
+        });
+
         // Функція, яка виконується при кліку на кнопку "Пополнить"
         document.getElementById('depositForm').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -214,7 +254,7 @@
                 .then(response => response.json())
                 .then(data => {
                     let addressPlaceholder = document.getElementById('depositAddressPlaceholder');
-                    addressPlaceholder.textContent = 'Адреса: ' + data.result.address; // Вставка адреси
+                    addressPlaceholder.textContent = 'Адреса: ' + data.result.address;
                 })
                 .catch(error => {
                     console.error('Помилка:', error);
