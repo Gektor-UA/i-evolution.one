@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Cpay;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 //62aafc0d26-33d5fc0e55-6245a36030-00d5c00c27 - ключ А
 class cPayController extends Controller

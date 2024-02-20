@@ -88,7 +88,7 @@
                                 <a class="{{ request()->is('register') ? 'active' : '' }}" href="{{ route('register') }}">{{ __('Регистрация') }}</a>
                                 <a class="{{ request()->is('login') ? 'active' : '' }}" href="{{ route('login') }}">{{ __('Авторизация') }}</a>
                             </li>
-                            
+
                         @endauth
                     </ul>
                 </nav>
