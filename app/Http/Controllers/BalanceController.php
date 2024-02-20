@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purse;
+use App\Models\Transaction;
+use App\Models\Withdraw;
 use App\Services\WhitebitService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -72,9 +74,23 @@ class BalanceController extends Controller
     {
         $user = Auth::user();
 
-        // Отримання даних з запиту
         $amount = $request->input('amount');
         $wallet = $request->input('wallet');
+
+        Transaction::create([
+            'user_id' => $user->id,
+            'type_transaction' => Transaction::WITHDRAWAL,
+            'purses_type' => Purse::I_HEALTH_PURSE,
+            'amount' => $amount,
+        ]);
+
+        Withdraw::create([
+            'user_id' => $user->id,
+            'amount' => $amount,
+            'wallet_type' => Purse::I_HEALTH_PURSE,
+            'status' => Withdraw::STATUS_PENDING,
+            'wallet' => $wallet
+        ]);
 
         // Відправка електронного листа адміністратору для підтвердження
 //        Mail::to('admin@example.com')->send(new WithdrawalNotificationMail($user, $amount, $wallet));

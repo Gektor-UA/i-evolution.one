@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('set null');
             $table->float('amount', 9, 2);
-            $table->integer('status');
+            $table->string('wallet')->default('');
             $table->integer('wallet_type');
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

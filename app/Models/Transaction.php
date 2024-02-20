@@ -9,7 +9,9 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    // Поповнення балансу
     const REFILL = 1;
+    // Вивід коштів
     const WITHDRAWAL = 2;
 
     // Константи для розміщення бонусів звичайних користувачів

@@ -9,12 +9,17 @@ class Withdraw extends Model
 {
     use HasFactory;
 
+    const STATUS_CONFIRM = 1;
+    const STATUS_CANCELED = 2;
+    const STATUS_PENDING = 3;
+
     protected $table = 'withdraws';
 
     protected $fillable = [
         'user_id',
         'amount',
         'status',
+        'wallet',
         'wallet_type',
     ];
 }
