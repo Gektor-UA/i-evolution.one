@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purse;
 use App\Services\WhitebitService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BalanceController extends Controller
 {
@@ -54,4 +57,30 @@ class BalanceController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+
+
+
+
+
+    /**
+     * withdrawal money through whitebit service
+     *
+     * @return json
+     */
+    public function withdraw(Request $request)
+    {
+        $user = Auth::user();
+
+        // Отримання даних з запиту
+        $amount = $request->input('amount');
+        $wallet = $request->input('wallet');
+
+        // Відправка електронного листа адміністратору для підтвердження
+//        Mail::to('admin@example.com')->send(new WithdrawalNotificationMail($user, $amount, $wallet));
+
+        // Повернення успішної відповіді
+        return response()->json(['message' => 'Запрос на вывод средств успешно отправлен']);
+    }
+
 }

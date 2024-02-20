@@ -14,10 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Підключення платіжної системи
-//Route::post('/cpay', [App\Http\Controllers\Cpay\cPayController::class, 'cPaySend']);
 Route::post('/balance/depositAddress', [App\Http\Controllers\BalanceController::class, 'depositAddress'])->name('balance.depositAddress');
 Route::post('/cpayconfirm', [App\Http\Controllers\Cpay\cPayControllerTake::class, 'cPayCon']);
 
+// Вивід коштів
+Route::post('/balance/withdraw', [App\Http\Controllers\BalanceController::class, 'withdraw'])->name('balance.withdraw');
 
 Route::get('/', function () {
     return view('index');
