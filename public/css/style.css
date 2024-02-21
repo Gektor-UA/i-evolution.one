@@ -243,6 +243,12 @@ main {
     letter-spacing: 0em;
     color: #EDE6EE;
     margin-bottom: 3px;
+    position: relative;
+}
+.auth__form__group label::after {
+    content: '*';
+    color: #EDE6EE;
+    margin-left: 3px;
 }
 
 .auth__form__input {
