@@ -16,7 +16,6 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // Валідація даних
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -31,11 +30,10 @@ class LoginController extends Controller
             } else {
                 return redirect()->intended('cabinet');
             }
+        } else {
+            return redirect()->route('login')->withErrors([
+                'email' => 'Неверная электронная почта или пароль.',
+            ])->withInput($request->only('email'));
         }
-
-        // Якщо авторизація не вдалася, перенаправте користувача назад на сторінку логіну з повідомленням про помилку
-        return back()->withErrors([
-            'email' => 'Неправильна електронна пошта або пароль.',
-        ]);
     }
 }
