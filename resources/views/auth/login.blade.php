@@ -17,6 +17,14 @@
                     <input type="password" class="auth__form__input" id="password" name="password" required>
                 </div>
 
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                    </div>
+                @endif
+
                 <div class="auth__form__group">
                     <button type="submit" class="form__submit" >{{ __('Войти') }}</button>
                 </div>

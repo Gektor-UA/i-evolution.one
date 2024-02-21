@@ -28,12 +28,13 @@ class RegistrationController extends Controller
      */
     public function create(Request $request)
     {
-        // Валидація даних
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users|max:255',
-        ]);
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            return redirect('/register')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         // Створення нового користувача
         $newUser = User::create([
@@ -97,7 +98,13 @@ class RegistrationController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers(), 'regex:/^[a-zA-Z0-9!]+$/'],
-            'registration_agreement' => ['accepted'],
+        ], [
+            'email.unique' => 'Такая почта уже зарегистрирована.',
+            'password.regex' => 'Пароль должен содержать только буквы, цифры и символ "!"',
+            'password.required' => 'Пароль обязателен для заполнения.',
+            'password.confirmed' => 'Подтверждение пароля не совпадает.',
+            'password.min' => 'Пароль должен содержать не менее 8 символов.',
+            'password' => 'Пароль должен содержать хотя бы одну заглавную и одну строчную букву.',
         ]);
     }
 }
