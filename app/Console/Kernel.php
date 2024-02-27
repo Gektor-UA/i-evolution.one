@@ -19,6 +19,11 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('app:partner-program-for-other-users')->daily()->at('03:00');
 //        $schedule->command('app:partner-program-for-ambassadors')->daily()->at('03:00');
 
+
+
+
+
+
         // для тестування
         $schedule->command('video:check-confirmation-time')->everyMinute();
         $schedule->command('video:payment-by-package')->everyMinute();
