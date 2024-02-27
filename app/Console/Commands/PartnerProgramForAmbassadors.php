@@ -415,7 +415,7 @@ class PartnerProgramForAmbassadors extends Command
 //                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом і потрапляє до списку');
                 $referralsAddedWithin90Days++;
             } else {
-                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом але не потрапляє до списку');
+//                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом але не потрапляє до списку');
             }
         }
 

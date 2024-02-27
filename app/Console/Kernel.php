@@ -12,12 +12,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();`
+        // для роботи
 //        $schedule->command('video:check-confirmation-time')->hourly();
 //        $schedule->command('video:payment-by-package')->hourly();
+//
+//        $schedule->command('app:partner-program-for-other-users')->daily()->at('03:00');
+//        $schedule->command('app:partner-program-for-ambassadors')->daily()->at('03:00');
 
 
 
+
+
+
+        // для тестування
         $schedule->command('video:check-confirmation-time')->everyMinute();
         $schedule->command('video:payment-by-package')->everyMinute();
 
