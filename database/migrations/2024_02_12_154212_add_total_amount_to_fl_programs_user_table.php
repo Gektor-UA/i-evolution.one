@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('fl_programs_user', function (Blueprint $table) {
-            $table->boolean('total_amount')->after('third_withdrawal')->nullable();
+            $table->integer('total_amount')->after('third_withdrawal')->nullable();
         });
     }
 
