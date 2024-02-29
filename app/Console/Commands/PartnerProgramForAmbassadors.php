@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\BonusClosingProgram;
+use App\Models\ProfileReferrer;
 use App\Models\ProgramsUser;
 use App\Models\Purse;
 use App\Models\ReferralsUser;
@@ -48,6 +49,7 @@ class PartnerProgramForAmbassadors extends Command
     public function handle()
     {
         $ambassadors = User::where('is_ambassador', 1)->get();
+//        \Log::info('$ambassadors', $ambassadors->toArray());
         foreach ($ambassadors as $ambassador) {
 
 //            \Log::info('$ambassador', $ambassador->toArray());
@@ -117,7 +119,10 @@ class PartnerProgramForAmbassadors extends Command
             }
 
             // Отримати прямих рефералів поточного користувача
-            $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+//            $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+            $directReferrals = ProfileReferrer::where('referrer_id', $userId)
+                ->whereNotNull('user_id')
+                ->pluck('user_id')->toArray();
 //            \Log::info('Масив прямих рефералів', $directReferrals);
 
             // Рекурсивно отримати рефералів для кожного прямого реферала
@@ -132,8 +137,11 @@ class PartnerProgramForAmbassadors extends Command
                 $referrals[] = ['user_id' => $referralId, 'level' => $level];
 
                 if (!$isUserAmbassador) {
-                    // Рекурсивно отримати рефералів для кожного прямого реферала, які не є амбасадорами
-                    $this->getReferralsRecursive($referralId, $referrals, $level + 1);
+
+                    if ($referralId !== null) {
+                        // Рекурсивно отримати рефералів для кожного прямого реферала, які не є амбасадорами
+                        $this->getReferralsRecursive($referralId, $referrals, $level + 1);
+                    }
                 }
 
 
@@ -291,7 +299,10 @@ class PartnerProgramForAmbassadors extends Command
      */
     private function getAllReferralsRecursive($userId, &$referrals = []) {
         // Отримати прямих рефералів поточного користувача
-        $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+//        $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+        $directReferrals = ProfileReferrer::where('referrer_id', $userId)
+            ->whereNotNull('user_id')
+            ->pluck('user_id')->toArray();
 
         // Додати прямих рефералів до загального списку рефералів
         $referrals = array_merge($referrals, $directReferrals);
@@ -304,8 +315,10 @@ class PartnerProgramForAmbassadors extends Command
                 ->exists();
 
             if (!$isUserAmbassador) {
-                // Рекурсивно отримати всіх рефералів для кожного прямого реферала, які не є амбасадорами
-                $this->getAllReferralsRecursive($referralId, $referrals);
+                if ($referralId !== null) {
+                    // Рекурсивно отримати всіх рефералів для кожного прямого реферала, які не є амбасадорами
+                    $this->getAllReferralsRecursive($referralId, $referrals);
+                }
             }
         }
 
@@ -398,57 +411,75 @@ class PartnerProgramForAmbassadors extends Command
         // Сьогоднішня дата
         $currentDate = Carbon::now();
         // Дата реєстрації поточного користувача
-        $userRegistrationDate = User::find($userId)->created_at;
+//        $userRegistrationDate = User::find($userId)->created_at;
 //        \Log::info('====================================');
 //        \Log::info('Дата реєстрації користувача: ' . $userId . ' - ' . $userRegistrationDate);
-        // Дата 90 днів після
-        $ninetyDaysLater = $userRegistrationDate->copy()->addDays(90);
-//        \Log::info('Дата 90 днів після: ' . $ninetyDaysLater);
+
+
+
+        // Дата першої купрленої програми
+        $userFirstProgram = ProgramsUser::where('user_id', $userId)->first();
 //        \Log::info('====================================');
+//        \Log::info('Перша куплена програма: ' . $userId . $userFirstProgram);
+//        \Log::info('====================================');
+        if ($userFirstProgram) {
+            $userFirstProgram = $userFirstProgram->created_at;
+//            \Log::info('====================================');
+//            \Log::info('Дата першої купрленої програми: ' . $userFirstProgram);
+//            \Log::info('-------------------------------------');
 
-        $referralsAddedWithin90Days = 0;
+// Дата 90 днів після
+//        $ninetyDaysLater = $userRegistrationDate->copy()->addDays(90);
+            $ninetyDaysLater = $userFirstProgram->copy()->addDays(90);
+//            \Log::info('Дата 90 днів після: ' . $ninetyDaysLater);
+//            \Log::info('====================================');
 
-        foreach ($referralCount as $referralId) {
-            $referral = User::find($referralId);
+            $referralsAddedWithin90Days = 0;
+
+            foreach ($referralCount as $referralId) {
+                $referral = User::find($referralId);
 //            \Log::info('Реферал: ' . $referral);
-            if ($referral->created_at <= $ninetyDaysLater && $referral->created_at >= $userRegistrationDate) {
-//                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом і потрапляє до списку');
-                $referralsAddedWithin90Days++;
-            } else {
-//                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом але не потрапляє до списку');
-            }
-        }
-
-//        \Log::info('====================================');
-//        \Log::info('Кількість рефералів до 90 днів: ' . $referralsAddedWithin90Days);
-//        \Log::info('====================================');
-
-
-        // Перевіряємо, чи пройшло 90 днів з моменту реєстрації
-        $daysSinceRegistration = $currentDate->diffInDays($userRegistrationDate);
-//        \Log::info('Пройшло днів: ' . $daysSinceRegistration);
-        foreach ($bonusAmounts as $referrals => $bonus) {
-            if ($referralsAddedWithin90Days >= $referrals && $daysSinceRegistration >= 90) {
-                Transaction::create([
-                    'user_id' => $userId,
-                    'type_transaction' => Transaction::QUICK_START,
-                    'amount' => $bonus,
-                    'wallet_type' => 1,
-                ]);
-
-                $userPurse = Purse::where('user_id', $userId)
-                    ->where('wallet_type', 1)
-                    ->first();
-                if ($userPurse) {
-                    $userPurse->amount += $bonus;
-                    $userPurse->save();
+//                if ($referral->created_at <= $ninetyDaysLater && $referral->created_at >= $userRegistrationDate) {
+                if ($referral->created_at <= $ninetyDaysLater && $referral->created_at >= $userFirstProgram) {
+                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом і потрапляє до списку');
+                    $referralsAddedWithin90Days++;
                 } else {
-                    Purse::create([
+//                \Log::info('Користувач з ID: ' . $referralId . ' є рефералом але не потрапляє до списку');
+                }
+            }
+
+//        \Log::info('====================================');
+//        \Log::info('Кількість рефералів до 90 днів: ' . $referrpalsAddedWithin90Days);
+//        \Log::info('====================================');
+
+
+            // Перевіряємо, чи пройшло 90 днів з моменту реєстрації
+//            $daysSinceRegistration = $currentDate->diffInDays($userRegistrationDate);
+            $daysSinceRegistration = $currentDate->diffInDays($userFirstProgram);
+//        \Log::info('Пройшло днів: ' . $daysSinceRegistration);
+            foreach ($bonusAmounts as $referrals => $bonus) {
+                if ($referralsAddedWithin90Days >= $referrals && $daysSinceRegistration >= 90) {
+                    Transaction::create([
                         'user_id' => $userId,
                         'type_transaction' => Transaction::QUICK_START,
                         'amount' => $bonus,
                         'wallet_type' => 1,
                     ]);
+
+                    $userPurse = Purse::where('user_id', $userId)
+                        ->where('wallet_type', 1)
+                        ->first();
+                    if ($userPurse) {
+                        $userPurse->amount += $bonus;
+                        $userPurse->save();
+                    } else {
+                        Purse::create([
+                            'user_id' => $userId,
+                            'type_transaction' => Transaction::QUICK_START,
+                            'amount' => $bonus,
+                            'wallet_type' => 1,
+                        ]);
+                    }
                 }
             }
         }

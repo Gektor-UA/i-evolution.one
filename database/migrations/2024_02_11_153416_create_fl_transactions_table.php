@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('programs', function (Blueprint $table) {
+        Schema::create('fl_transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('program_name');
-            $table->integer('first_amount');
-            $table->integer('second_amount');
-            $table->integer('third_amount');
-            $table->integer('income_program');
+            $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('set null');
+            $table->integer('type_transaction');
+            $table->float('amount', 17, 8);
+            $table->integer('purses_type')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('programs');
+        Schema::dropIfExists('fl_transactions');
     }
 };

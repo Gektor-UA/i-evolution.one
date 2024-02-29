@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('videos', function (Blueprint $table) {
-            $table->boolean('is_program')->after('is_approved')->nullable();
+        Schema::table('fl_programs_user', function (Blueprint $table) {
+            $table->boolean('total_amount')->after('third_withdrawal')->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('videos', function (Blueprint $table) {
-            $table->dropColumn('is_program');
+        Schema::table('fl_programs_user', function (Blueprint $table) {
+            $table->dropColumn('total_amount');
         });
     }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bonus_closing_program', function (Blueprint $table) {
+        Schema::create('fl_bonus_closing_program', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('referral_id');
@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('referral_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('program_id')->references('id')->on('programs_user')->onDelete('cascade');
+            $table->foreign('program_id')->references('id')->on('fl_programs_user')->onDelete('cascade');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bonus_closing_program');
+        Schema::dropIfExists('fl_bonus_closing_program');
     }
 };

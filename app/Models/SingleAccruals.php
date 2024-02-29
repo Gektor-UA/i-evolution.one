@@ -9,7 +9,7 @@ class SingleAccruals extends Model
 {
     use HasFactory;
 
-    protected $table = 'single_accruals';
+    protected $table = 'fl_single_accruals';
     protected $fillable = [
         'user_id',
         'referral_id',
