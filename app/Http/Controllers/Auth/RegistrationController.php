@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProfileReferrer;
 use App\Models\Purse;
 use App\Models\ReferralsUser;
 use App\Models\User;
@@ -58,10 +59,14 @@ class RegistrationController extends Controller
         // Перевірка та створення реферала
         $RefUser = User::where('referrer_hash', '=', Cookie::get('referrerHash'))->first();
         if (!empty($RefUser)) {
-            ReferralsUser::create([
+            ProfileReferrer::create([
                 'user_id' => $newUser->id,
-                'referral_id' => $RefUser->id]
-            );
+                'referrer_id' => $RefUser->id
+            ]);
+//            ReferralsUser::create([
+//                'user_id' => $newUser->id,
+//                'referral_id' => $RefUser->id]
+//            );
         }
 
         // Автентифікація користувача
