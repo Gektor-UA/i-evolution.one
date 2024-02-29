@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('referrals_user', function (Blueprint $table) {
+        Schema::create('fl_programs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('set null');
-            $table->foreignId('referral_id')->nullable()->references('id')->on('users')->onDelete('set null');
+            $table->string('program_name');
+            $table->integer('first_amount');
+            $table->integer('second_amount');
+            $table->integer('third_amount');
+            $table->integer('income_program');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('referrals_user');
+        Schema::dropIfExists('fl_programs');
     }
 };

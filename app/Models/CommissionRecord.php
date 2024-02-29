@@ -9,7 +9,7 @@ class CommissionRecord extends Model
 {
     use HasFactory;
 
-    protected $table = 'commission_records';
+    protected $table = 'fl_commission_records';
     protected $fillable = [
         'user_id',
         'referral_id',

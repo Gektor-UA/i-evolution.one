@@ -11,7 +11,7 @@ class Video extends Model
 
     const BONUS_VIDEO = 20;
 
-    protected $table = 'videos';
+    protected $table = 'fl_videos';
 
     protected $fillable = [
         'user_id',

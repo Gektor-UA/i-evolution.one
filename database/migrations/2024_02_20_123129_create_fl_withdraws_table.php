@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('withdraws', function (Blueprint $table) {
+        Schema::create('fl_withdraws', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('set null');
             $table->float('amount', 9, 2);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('withdraws');
+        Schema::dropIfExists('fl_withdraws');
     }
 };
