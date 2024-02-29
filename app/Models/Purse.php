@@ -11,6 +11,6 @@ class Purse extends Model
 
     const I_HEALTH_PURSE = 1;
 
-    protected $table = 'purses';
+    protected $table = 'fl_purses';
     protected $fillable = ['user_id', 'amount','wallet_type', 'percent'];
 }
