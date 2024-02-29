@@ -13,7 +13,7 @@ class ProgramsSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('programs')->insert([
+        DB::table('fl_programs')->insert([
             [
                 'program_name' => 'Program 70$',
                 'first_amount' => '25',

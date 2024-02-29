@@ -13,7 +13,7 @@ class Withdraw extends Model
     const STATUS_CANCELLED = 2;
     const STATUS_PENDING = 3;
 
-    protected $table = 'withdraws';
+    protected $table = 'fl_withdraws';
 
     protected $fillable = [
         'user_id',

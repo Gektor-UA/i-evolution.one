@@ -9,7 +9,7 @@ class ProgramsUser extends Model
 {
     use HasFactory;
 
-    protected $table = 'programs_user';
+    protected $table = 'fl_programs_user';
 
     protected $fillable = [
         'user_id',

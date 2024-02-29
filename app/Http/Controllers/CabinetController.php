@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProfileReferrer;
 use App\Models\ProgramsUser;
 use App\Models\Purse;
 use App\Models\ReferralsUser;
@@ -45,7 +46,9 @@ class CabinetController extends Controller
             ->first();
 
 //        // Виклик методу для отримання всіх рефералів користувача та їхніх рефералів
-//        $referals = $this->getReferralsRecursive($user_id);
+//        $referals = $this->getAllReferralsRecursive($user_id);
+//        \Log::info('$referals', $referals);
+
 
         return view('cabinet', [
             'video' => $video,
@@ -75,7 +78,8 @@ class CabinetController extends Controller
 //    private function getReferralsRecursive($userId, &$referrals = [])
 //    {
 //        // Отримуємо всіх рефералів поточного користувача
-//        $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+////        $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+//        $directReferrals = ProfileReferrer::where('referrer_id', $userId)->pluck('user_id')->toArray();
 //
 //        // Додаємо всіх прямих рефералів до загального списку рефералів
 //        $referrals = array_merge($referrals, $directReferrals);
@@ -86,5 +90,85 @@ class CabinetController extends Controller
 //        }
 //
 //        return $referrals;
+//    }
+
+
+
+
+
+
+
+
+
+
+
+    private function getAllReferralsRecursive($userId, &$referrals = []) {
+        // Отримати прямих рефералів поточного користувача
+//        $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+        $directReferrals = ProfileReferrer::where('referrer_id', $userId)->pluck('user_id')->toArray();
+
+        \Log::info('$directReferrals', $directReferrals);
+
+        // Додати прямих рефералів до загального списку рефералів
+        $referrals = array_merge($referrals, $directReferrals);
+
+        // Рекурсивно отримати всіх рефералів для кожного прямого реферала
+        foreach ($directReferrals as $referralId) {
+            // Перевірка чи є користувач амбасадором
+            $isUserAmbassador = User::where('id', $referralId)
+                ->where('is_ambassador', 1)
+                ->exists();
+
+            if (!$isUserAmbassador) {
+                // Рекурсивно отримати всіх рефералів для кожного прямого реферала, які не є амбасадорами
+                $this->getAllReferralsRecursive($referralId, $referrals);
+            }
+        }
+
+        return $referrals;
+    }
+
+
+
+
+
+
+
+
+//    private function getReferralsRecursive($userId, &$referrals = [], $level = 1)
+//    {
+//        // Перевірка чи є користувач амбасадором
+//        $isUserAmbassador = User::where('id', $userId)
+//            ->where('is_ambassador', 1)
+//            ->first();
+//
+//        if (!$isUserAmbassador) {
+//            // Виводити тільки 3 лінії рефералів
+//            if ($level > 3) {
+//                return [];
+//            }
+//
+//            // Отримати прямих рефералів поточного користувача
+////            $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+//            $directReferrals = ProfileReferrer::where('referrer_id', $userId)->pluck('user_id')->toArray();
+//            \Log::info('Масив прямих рефералів', $directReferrals);
+//
+//            // Рекурсивно отримати рефералів для кожного прямого реферала
+//            foreach ($directReferrals as $referralId) {
+//
+//                // Додати прямого реферала з відповідним рівнем
+//                $referrals[] = ['user_id' => $referralId, 'level' => $level];
+//
+//                // Рекурсивно отримати рефералів для кожного прямого реферала, які не є амбасадорами
+//                $this->getReferralsRecursive($referralId, $referrals, $level + 1);
+//            }
+//
+//            // Впорядкувати масив за рівнем
+//            usort($referrals, function ($a, $b) {
+//                return $a['level'] <=> $b['level'];
+//            });
+//
+//            return $referrals;
+//        }
 //    }
 }

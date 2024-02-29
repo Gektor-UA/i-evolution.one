@@ -46,7 +46,7 @@ class Transaction extends Model
     // Константа для нарахування бонусу по програмі "Кількість амбасадорів"
     const AMBASSADORS = 24;
 
-    protected $table = 'transactions';
+    protected $table = 'fl_transactions';
     protected $fillable = [
         'user_id',
         'type_transaction',
