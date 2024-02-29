@@ -9,7 +9,7 @@ class BonusClosingProgram extends Model
 {
     use HasFactory;
 
-    protected $table = 'bonus_closing_program';
+    protected $table = 'fl_bonus_closing_program';
     protected $fillable = [
         'user_id',
         'referral_id',

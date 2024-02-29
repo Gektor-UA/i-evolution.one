@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\CommissionRecord;
+use App\Models\ProfileReferrer;
 use App\Models\ProgramsUser;
 use App\Models\Purse;
 use App\Models\ReferralsUser;
@@ -117,7 +118,8 @@ class PartnerProgramForOtherUsers extends Command
             }
 
             // Отримати прямих рефералів поточного користувача
-            $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+//            $directReferrals = ReferralsUser::where('referral_id', $userId)->pluck('user_id')->toArray();
+            $directReferrals = ProfileReferrer::where('referrer_id', $userId)->pluck('user_id')->toArray();
 //            \Log::info('Масив прямих рефералів', $directReferrals);
 
             // Рекурсивно отримати рефералів для кожного прямого реферала
@@ -126,8 +128,10 @@ class PartnerProgramForOtherUsers extends Command
                 // Додати прямого реферала з відповідним рівнем
                 $referrals[] = ['user_id' => $referralId, 'level' => $level];
 
-                // Рекурсивно отримати рефералів для кожного прямого реферала, які не є амбасадорами
-                $this->getReferralsRecursive($referralId, $referrals, $level + 1);
+                if ($referralId !== null) {
+                    // Рекурсивно отримати рефералів для кожного прямого реферала, які не є амбасадорами
+                    $this->getReferralsRecursive($referralId, $referrals, $level + 1);
+                }
             }
 
             // Впорядкувати масив за рівнем
